@@ -30,6 +30,7 @@ router.register(r'api/v1/first_aid_training', views.FirstAidViewSet)
 router.register(r'api/v1/application', views.NannyApplicationViewSet)
 router.register(r'api/v1/childcare-training', views.ChildcareTrainingViewSet)
 router.register(r'api/v1/childcare-address', views.ChildcareAddressViewSet)
+router.register(r'api/v1/dbs-check', views.DbsViewSet)
 router.register(r'api/v1/applicant-personal-details', views.ApplicantPersonalDetailsViewSet)
 router.register(r'api/v1/applicant-home-address', views.ApplicantHomeAddressViewSet)
 

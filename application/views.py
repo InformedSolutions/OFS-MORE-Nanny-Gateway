@@ -3,6 +3,7 @@ from django_filters import rest_framework as filters
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
+from application.models.nanny_models.dbs_check import DbsCheckSerializer, DbsCheck
 from application.models.nanny_models.nanny_application import NannyApplication, NannyApplicationSerializer
 from application.models import FirstAidTraining, FirstAidTrainingSerializer
 from application.models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
@@ -78,19 +79,14 @@ class FirstAidViewSet(BaseViewSet):
         'application_id',
     )
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        if not queryset.exists():
-            raise NotFound(detail="Error 404, resource not found", code=404)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
+class DbsViewSet(BaseViewSet):
+    queryset = DbsCheck.objects.all()
+    serializer_class = DbsCheckSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = (
+        'dbs_id',
+        'application_id'
+    )
 
 class ApplicantPersonalDetailsViewSet(BaseViewSet):
     queryset = ApplicantPersonalDetails.objects.all()
