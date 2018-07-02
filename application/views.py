@@ -12,6 +12,7 @@ from application.models.nanny_models.applicant_personal_details import Applicant
     ApplicantPersonalDetailsSerializer
 from application.models.nanny_models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
 from application.models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
+from application.models.nanny_models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -106,3 +107,14 @@ class ApplicantHomeAddressViewSet(BaseViewSet):
         'personal_detail_id',
         'application_id'
     )
+
+
+class InsuranceCoverViewSet(BaseViewSet):
+
+    queryset = InsuranceCover.objects.all()
+    serializer_class = InsuranceCoverSerializer
+    filter_fields = (
+        'insurance_cover_id',
+        'application_id'
+    )
+
