@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from django_filters import rest_framework as filters
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
+from rest_framework.filters import OrderingFilter
 
 from application.models.nanny_models.dbs_check import DbsCheckSerializer, DbsCheck
 from application.models.nanny_models.nanny_application import NannyApplication, NannyApplicationSerializer
@@ -30,7 +31,7 @@ class BaseViewSet(viewsets.ModelViewSet):
     destroy:
     Delete the application with the corresponding primary key (application_id) from the database
     """
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend, OrderingFilter,)
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -60,6 +61,12 @@ class ChildcareAddressViewSet(BaseViewSet):
     filter_fields = (
         'childcare_address_id',
         'application_id'
+    )
+    ordering_fields = (
+        'date_created'
+    )
+    ordering = (
+        'date_created',
     )
 
 

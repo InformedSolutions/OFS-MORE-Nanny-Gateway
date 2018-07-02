@@ -15,6 +15,7 @@ class ChildcareAddress(models.Model):
     api = ApiCalls("childcare-address", "childcare_address_id")
 
     application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
+    date_created = models.DateTimeField(blank=True, null=True)
     childcare_address_id = models.UUIDField(primary_key=True, default=uuid4)
     street_line1 = models.CharField(max_length=100, blank=True, null=True)
     street_line2 = models.CharField(max_length=100, blank=True, null=True)
