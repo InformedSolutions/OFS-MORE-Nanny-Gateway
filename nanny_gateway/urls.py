@@ -34,6 +34,7 @@ router.register(r'api/v1/dbs-check', views.DbsViewSet)
 router.register(r'api/v1/applicant-personal-details', views.ApplicantPersonalDetailsViewSet)
 router.register(r'api/v1/applicant-home-address', views.ApplicantHomeAddressViewSet)
 router.register(r'api/v1/insurance-cover', views.InsuranceCoverViewSet)
+router.register(r'api/v1/declaration', views.DeclarationViewSet)
 
 urlpatterns = [
     url(r'^schema/$', schema_view),

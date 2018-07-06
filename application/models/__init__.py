@@ -7,5 +7,6 @@ from application.models.nanny_models.applicant_personal_details import *
 from application.models.nanny_models.applicant_home_address import *
 from application.models.nanny_models.insurance_cover import *
 from application.models.nanny_models.dbs_check import *
+from application.models.nanny_models.declaration import *
 
 name = "nanny_models"
