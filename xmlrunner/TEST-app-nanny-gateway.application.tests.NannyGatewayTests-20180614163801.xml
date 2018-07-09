@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite errors="0" failures="0" name="app-nanny-gateway.application.tests.NannyGatewayTests-20180614163801" tests="1" time="0.040">
-	<properties/>
-	<system-out>
-<![CDATA[]]>	</system-out>
-	<system-err>
-<![CDATA[]]>	</system-err>
-	<testcase classname="app-nanny-gateway.application.tests.NannyGatewayTests" name="test_get_request_returns_404_for_childminder_app_types" time="0.040"/>
-</testsuite>

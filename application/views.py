@@ -4,16 +4,15 @@ from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
 
-from application.models.nanny_models.dbs_check import DbsCheckSerializer, DbsCheck
-from application.models.nanny_models.nanny_application import NannyApplication, NannyApplicationSerializer
-from application.models import FirstAidTraining, FirstAidTrainingSerializer
-from application.models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
-from application.models.nanny_models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
-from application.models.nanny_models.applicant_personal_details import ApplicantPersonalDetails, \
+from .models.nanny_models.dbs_check import DbsCheckSerializer, DbsCheck
+from .models.nanny_models.nanny_application import NannyApplication, NannyApplicationSerializer
+from .models import FirstAidTraining, FirstAidTrainingSerializer
+from .models.nanny_models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
+from .models.nanny_models.applicant_personal_details import ApplicantPersonalDetails, \
     ApplicantPersonalDetailsSerializer
-from application.models.nanny_models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
-from application.models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
-from application.models.nanny_models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
+from .models.nanny_models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
+from .models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
+from .models.nanny_models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -86,6 +85,7 @@ class FirstAidViewSet(BaseViewSet):
         'first_aid_id',
         'application_id',
     )
+
 
 class DbsViewSet(BaseViewSet):
     queryset = DbsCheck.objects.all()
