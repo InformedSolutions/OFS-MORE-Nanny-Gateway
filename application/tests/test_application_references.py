@@ -77,7 +77,7 @@ class ApplicationReferenceTests(TestCase):
             application_id=(UUID(self.test_application_id)),
         )
 
-        get_endpoint = reverse('Assign-Application-Reference-View') + '?id=' + self.test_application_id
+        get_endpoint = reverse('Assign-Application-Reference-View', kwargs={'application_id': self.test_application_id})
         response = self.client.get(get_endpoint)
 
         test_application.refresh_from_db()
@@ -86,5 +86,5 @@ class ApplicationReferenceTests(TestCase):
         self.assertIsNotNone(response)
 
         response_body = json.loads(response.content)
-        self.assertIsNotNone(response_body['application_reference'])
+        self.assertIsNotNone(response_body['reference'])
 

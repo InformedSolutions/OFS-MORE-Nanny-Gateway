@@ -8,5 +8,6 @@ from .nanny_models.applicant_home_address import *
 from .nanny_models.insurance_cover import *
 from .nanny_models.dbs_check import *
 from .nanny_models.application_reference import *
+from .nanny_models.payment import *
 
 name = "nanny_models"
