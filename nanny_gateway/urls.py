@@ -17,7 +17,6 @@ import re
 
 from django.conf.urls import url, include
 from django.conf import settings
-from django.contrib import admin
 from rest_framework_swagger.views import get_swagger_view
 from rest_framework.routers import DefaultRouter
 from application import views
@@ -37,7 +36,8 @@ router.register(r'api/v1/insurance-cover', views.InsuranceCoverViewSet)
 
 urlpatterns = [
     url(r'^schema/$', schema_view),
-    url(r'^', include(router.urls))
+    url(r'^', include(router.urls)),
+    url(r'^application/application-reference/$', views.retrieve_reference_number, name='Assign-Application-Reference-View'),
 ]
 
 

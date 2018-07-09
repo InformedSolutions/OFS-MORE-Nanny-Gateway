@@ -9,6 +9,19 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def allocate_reference_number(application_id):
+    """
+    Method for allocating a reference number to an application
+    """
+    application = NannyApplication.objects.get(pk=application_id)
+
+    # If an application reference number has not yet been allocated
+    # assign an persist value
+    if application.application_reference is None:
+        application.application_reference = create_application_reference()
+        application.save()
+
+
 def create_application_reference():
     """
     Function for getting the next available reference number that can be allocated to a Childminder application

@@ -1,5 +1,7 @@
-from rest_framework import viewsets
+from django.http import JsonResponse
+from rest_framework import viewsets, request
 from django_filters import rest_framework as filters
+from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
@@ -13,6 +15,7 @@ from .models.nanny_models.applicant_personal_details import ApplicantPersonalDet
 from .models.nanny_models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
 from .models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
 from .models.nanny_models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
+from .application_reference_generator import create_application_reference
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -124,4 +127,25 @@ class InsuranceCoverViewSet(BaseViewSet):
         'insurance_cover_id',
         'application_id'
     )
+
+
+@api_view(['GET'])
+def retrieve_reference_number(request):
+    """
+    Method for allocating a reference number to an application
+    or retrieving an existing reference number
+    :return: the assigned application reference number
+    """
+    application_id = request.GET['id']
+    application = NannyApplication.objects.get(pk=application_id)
+
+    # If an application reference number has not yet been allocated
+    # assign an persist value
+    if application.application_reference is None:
+        application.application_reference = create_application_reference()
+        application.save()
+
+    return JsonResponse({
+        'application_reference': application.application_reference
+    })
 
