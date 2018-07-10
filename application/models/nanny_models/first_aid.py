@@ -30,3 +30,20 @@ class FirstAidTrainingSerializer(serializers.ModelSerializer):
         model = FirstAidTraining
         fields = '__all__'
 
+    def get_bool_as_string(self, bool_field):
+        if bool_field:
+            return 'Yes'
+        else:
+            return 'No'
+
+    def get_summary_table(self):
+        data = self.data
+        valid = True if len(data['training_organisation']) and len(data['course_title']) and len(data['course_date']) \
+            else False
+        return [
+                {"title": "First aid qualification", "id": data['first_aid_id']},
+                {"name": "Do you have a valid first aid qualification?",
+                 "value": self.get_bool_as_string(valid),
+                 'pk': data['first_aid_id'],
+                    "reverse": "first-aid:Training-Details"}
+            ]

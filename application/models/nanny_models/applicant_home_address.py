@@ -42,3 +42,27 @@ class ApplicantHomeAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicantHomeAddress
         fields = '__all__'
+
+    def get_address(self):
+        data = self.data
+        return str(data['street_line1']) + ', ' + str(data['street_line2']) + ', ' \
+               + str(data['town']) + ', ' + str(data['postcode'])
+
+    def get_bool_as_string(self, bool_field):
+        if bool_field:
+            return "Yes"
+        else:
+            return "No"
+
+    def get_summary_table(self):
+        data = self.data
+        home_address = self.get_address()
+        return [
+                {"name": "Your home address", "value": home_address, 'pk': data['home_address_id'], "index": 3,
+                 "reverse": "personal-details:Personal-Details-Manual-Address"},
+                {"name": "Is this where you will look after the children?",
+                 "value": self.get_bool_as_string(data['childcare_address']),
+                 'pk': data['home_address_id'], "index": 4,
+                 "reverse": "Childcare-Address-Location"}
+            ]
+

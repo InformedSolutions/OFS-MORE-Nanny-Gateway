@@ -35,3 +35,23 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicantPersonalDetails
         fields = '__all__'
+
+    def get_name(self):
+        data = self.data
+        if data['middle_names']:
+            return str(data['first_name']) + " " + str(data['middle_names']) + " " + str(data['last_name'])
+        else:
+            return str(data['first_name']) + " " + str(data['last_name'])
+
+    def get_summary_table(self):
+        data = self.data
+        return [
+                {"title": "Your personal details", "id": data['personal_detail_id'], "index": 0},
+                {"name": "Full name",
+                 "value": self.get_name(),
+                 'pk': data['personal_detail_id'], "index": 2,
+                 "reverse": "personal-details:Personal-Details-Name"},
+                {"name": "Date of birth",
+                 "value": str(data['date_of_birth']), 'pk': data['personal_detail_id'], "index": 2,
+                 "reverse": "personal-details:Personal-Details-Date-Of-Birth"}
+            ]

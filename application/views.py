@@ -3,6 +3,7 @@ from django_filters import rest_framework as filters
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
+from django.http import JsonResponse
 
 from application.models.nanny_models.dbs_check import DbsCheckSerializer, DbsCheck
 from application.models.nanny_models.nanny_application import NannyApplication, NannyApplicationSerializer
@@ -15,6 +16,15 @@ from application.models.nanny_models.applicant_home_address import ApplicantHome
 from application.models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
 from application.models.nanny_models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
 from application.models.nanny_models.declaration import Declaration, DeclarationSerializer
+
+serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
+               'applicant_personal_details': ApplicantPersonalDetailsSerializer,
+               'childcare_address': ChildcareAddressSerializer,
+               'childcare_training': ChildcareTrainingSerializer,
+               'dbs_check': DbsCheckSerializer,
+               'first_aid': FirstAidTrainingSerializer,
+               'insurance_cover': InsuranceCoverSerializer,
+               'application': NannyApplicationSerializer}
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -136,3 +146,23 @@ class DeclarationViewSet(BaseViewSet):
         'application_id'
     )
 
+
+def summary_table(request):
+    if request.method == 'GET':
+        model_name = request.GET['name']
+        app_id = request.GET['id']
+        if model_name in serializers.keys():
+            serializer = serializers[model_name]
+            model = serializer.Meta.model
+            records = model.objects.filter(application_id=app_id)
+            if len(records) == 1:
+                return JsonResponse(serializer(records[0]).get_summary_table(), safe=False)
+            else:
+                summary_list = []
+                i = 1
+                summary_list.append(serializer().get_title_row())
+                for record in records:
+                    row = serializer(record).get_summary_table(i)
+                    summary_list.append(row)
+                    i += 1
+                return JsonResponse(summary_list, safe=False)

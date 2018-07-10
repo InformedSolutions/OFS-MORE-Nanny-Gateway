@@ -27,3 +27,19 @@ class DbsCheckSerializer(serializers.ModelSerializer):
         model = DbsCheck
         fields = '__all__'
 
+    def get_bool_as_string(self, bool_field):
+        if bool_field:
+            return 'Yes'
+        else:
+            return 'No'
+
+    def get_summary_table(self):
+        fields = self.data
+        return [
+            {"title": "Criminal record (DBS) check", "id": fields['dbs_id']},
+            {"name": "DBS certificate number", "value": fields['dbs_number'],
+             "reverse": "dbs:Details"},
+            {"name": "Do you have any cautions or convictions?",
+             "value": self.get_bool_as_string(fields['convictions']),
+             "reverse": "dbs:Details"}
+        ]

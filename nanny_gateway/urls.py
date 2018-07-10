@@ -37,8 +37,9 @@ router.register(r'api/v1/insurance-cover', views.InsuranceCoverViewSet)
 router.register(r'api/v1/declaration', views.DeclarationViewSet)
 
 urlpatterns = [
+    url(r'^api/v1/summary/$', views.summary_table, name="Summary"),
     url(r'^schema/$', schema_view),
-    url(r'^', include(router.urls))
+    url(r'^', include(router.urls)),
 ]
 
 

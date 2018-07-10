@@ -33,3 +33,23 @@ class ChildcareTrainingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChildcareTraining
         fields = '__all__'
+
+    def get_bool_as_string(self, bool_field):
+        if bool_field:
+            return 'Yes'
+        else:
+            return 'No'
+
+    def get_summary_table(self):
+        data = self.data
+        return [
+                {"title": "Childcare training", "id": data['childcare_training_id']},
+                {"name": "Do you have a childcare qualification?",
+                 "value": self.get_bool_as_string(data['level_2_training']),
+                 'pk': data['childcare_training_id'],
+                 "reverse": "Type-Of-Childcare-Training"},
+                {"name": "Have you had common core training?",
+                 "value": self.get_bool_as_string(data['common_core_training']),
+                 'pk': data['childcare_training_id'],
+                 "reverse": "Type-Of-Childcare-Training"}
+            ]

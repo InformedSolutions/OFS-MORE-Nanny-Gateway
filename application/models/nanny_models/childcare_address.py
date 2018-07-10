@@ -1,5 +1,5 @@
 from uuid import uuid4
-
+import inflect
 from rest_framework import serializers
 from .base import ApiCalls
 from django.db import models
@@ -36,3 +36,26 @@ class ChildcareAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChildcareAddress
         fields = '__all__'
+
+    def get_title_row(self):
+        return {"title": "Childcare address", "id": self.data['childcare_address_id'], "index": 0}
+
+    def get_address_ord(self, i):
+        """
+        get ordinal value of this childcare address
+        :param i: index of address
+        :return:
+        """
+        formatter = inflect.engine()
+        return formatter.number_to_words(formatter.ordinal(i)).title()
+
+    def get_address(self):
+        data = self.data
+        return str(data['street_line1']) + ', ' + str(data['street_line2']) + ', ' \
+               + str(data['town']) + ', ' + str(data['postcode'])
+
+    def get_summary_table(self, i):
+        childcare_address = self.get_address()
+        row_name = "Childcare address" if i == 1 else self.get_address_ord(i) + " childcare address"
+        return {"name": row_name, "value": childcare_address, 'pk': self.data['childcare_address_id'],
+                "reverse": "Childcare-Address-Manual-Entry", 'index': i+1}
