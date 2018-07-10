@@ -168,7 +168,10 @@ def summary_table(request, name, application_id):
             model = serializer.Meta.model
             records = model.objects.filter(application_id=application_id)
             if name != "childcare_address":
-                return JsonResponse(serializer(records[0]).get_summary_table(), safe=False)
+                if records:
+                    return JsonResponse(serializer(records[0]).get_summary_table(), safe=False)
+                else:
+                    return JsonResponse([], safe=False)
             else:
                 summary_list = []
                 i = 1
