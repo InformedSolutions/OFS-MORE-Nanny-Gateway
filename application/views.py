@@ -182,6 +182,8 @@ def summary_table(request, name, application_id):
                     i += 1
                 return JsonResponse(summary_list, safe=False)
 
+
+@api_view(['GET'])
 def retrieve_reference_number(request, application_id):
     """
     Method for allocating a reference number to an application
