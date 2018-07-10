@@ -17,7 +17,6 @@ import re
 
 from django.conf.urls import url, include
 from django.conf import settings
-from django.contrib import admin
 from rest_framework_swagger.views import get_swagger_view
 from rest_framework.routers import DefaultRouter
 from application import views
@@ -35,12 +34,16 @@ router.register(r'api/v1/applicant-personal-details', views.ApplicantPersonalDet
 router.register(r'api/v1/applicant-home-address', views.ApplicantHomeAddressViewSet)
 router.register(r'api/v1/insurance-cover', views.InsuranceCoverViewSet)
 router.register(r'api/v1/declaration', views.DeclarationViewSet)
+router.register(r'api/v1/payment', views.PaymentViewSet)
+
 
 urlpatterns = [
     url(r'^api/v1/summary/(?P<name>\w+)/(?P<application_id>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$',
         views.summary_table, name="Summary"),
     url(r'^schema/$', schema_view),
     url(r'^', include(router.urls)),
+    url(r'^api/v1/application/application_reference/(?P<application_id>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$',
+        views.retrieve_reference_number, name='Assign-Application-Reference-View'),
 ]
 
 
@@ -51,3 +54,4 @@ if settings.URL_PREFIX:
         prefixed_url_pattern.append(pat)
     urlpatterns = prefixed_url_pattern
 
+handler404 = views.yield404
