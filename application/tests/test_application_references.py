@@ -72,19 +72,3 @@ class ApplicationReferenceTests(TestCase):
         self.assertIsNotNone(test_application.application_reference)
         self.assertEqual(test_application.application_reference, str(self.test_discriminator + '1000001'))
 
-    def test_can_reconcile_api_endpoint_for_reference_allocation(self):
-        test_application = NannyApplication.objects.create(
-            application_id=(UUID(self.test_application_id)),
-        )
-
-        get_endpoint = reverse('Assign-Application-Reference-View', kwargs={'application_id': self.test_application_id})
-        response = self.client.get(get_endpoint)
-
-        test_application.refresh_from_db()
-
-        self.assertIsNotNone(test_application.application_reference)
-        self.assertIsNotNone(response)
-
-        response_body = json.loads(response.content)
-        self.assertIsNotNone(response_body['reference'])
-
