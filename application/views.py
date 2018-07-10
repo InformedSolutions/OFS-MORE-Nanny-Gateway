@@ -1,19 +1,21 @@
-from rest_framework import viewsets
+from django.http import JsonResponse
+from rest_framework import viewsets, request, status
 from django_filters import rest_framework as filters
+from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
 
-from application.models.nanny_models.dbs_check import DbsCheckSerializer, DbsCheck
-from application.models.nanny_models.nanny_application import NannyApplication, NannyApplicationSerializer
-from application.models import FirstAidTraining, FirstAidTrainingSerializer
-from application.models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
-from application.models.nanny_models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
-from application.models.nanny_models.applicant_personal_details import ApplicantPersonalDetails, \
+from .models.nanny_models.dbs_check import DbsCheckSerializer, DbsCheck
+from .models.nanny_models.nanny_application import NannyApplication, NannyApplicationSerializer
+from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer
+from .models.nanny_models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
+from .models.nanny_models.applicant_personal_details import ApplicantPersonalDetails, \
     ApplicantPersonalDetailsSerializer
-from application.models.nanny_models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
-from application.models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
-from application.models.nanny_models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
+from .models.nanny_models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
+from .models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
+from .models.nanny_models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
+from .application_reference_generator import create_application_reference
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -87,6 +89,7 @@ class FirstAidViewSet(BaseViewSet):
         'application_id',
     )
 
+
 class DbsViewSet(BaseViewSet):
     queryset = DbsCheck.objects.all()
     serializer_class = DbsCheckSerializer
@@ -124,4 +127,47 @@ class InsuranceCoverViewSet(BaseViewSet):
         'insurance_cover_id',
         'application_id'
     )
+
+
+class PaymentViewSet(BaseViewSet):
+
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    filter_fields = (
+        'payment_id',
+        'application_id'
+    )
+
+
+@api_view(['GET'])
+def retrieve_reference_number(request, application_id):
+    """
+    Method for allocating a reference number to an application
+    or retrieving an existing reference number
+    """
+    try:
+        application = NannyApplication.objects.get(pk=application_id)
+
+        # If an application reference number has not yet been allocated
+        # assign an persist value
+        if application.application_reference is None:
+            application.application_reference = create_application_reference()
+            application.save()
+
+        return JsonResponse({
+            'reference': application.application_reference
+        })
+    except NannyApplication.DoesNotExist:
+        return yield404(request)
+
+
+def yield404(request):
+    """
+    Custom handler to yield a JSON object with a 404 status code
+    :param request: the inbound HTTP request
+    :return: An http response comprised of a descriptive error and a 404 status code
+    """
+    return Response({
+        'error': 'The resource was not found'
+    }, status=status.HTTP_404_NOT_FOUND)
 
