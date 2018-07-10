@@ -16,6 +16,15 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+GOVUK_SERVICE_SETTINGS = {
+    'name': 'OFS',
+    'phase': 'beta',
+    'header_link_view_name': '',
+    'header_links': [
+        {'name': 'Home', 'link': 'service_app:home', 'link_is_view_name': True},
+    ],
+}
+
 # Application definition
 
 
@@ -80,6 +89,8 @@ SECRET_KEY = '539+gg!xpw4*=9-coh2uy@qm#jg+tjptafmz)r1_3=uw+n-07n'
 DEBUG = True
 
 APP_NANNY_GATEWAY_URL = 'http://localhost:8000/nanny-gateway'
+
+PUBLIC_APPLICATION_URL = os.environ.get('PUBLIC_APPLICATION_URL')
 
 URL_PREFIX = '/nanny-gateway'
 
