@@ -6,6 +6,9 @@ TEST_MODE = True
 
 INSTALLED_APPS = BUILTIN_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
+# Instruct django-rest-swagger to use x-forwarded host header for endpoint resolution
+USE_X_FORWARDED_HOST = True
+
 # Automatic Django logging at the INFO level (i.e everything the comes to the console when ran locally)
 LOGGING = {
   'version': 1,
