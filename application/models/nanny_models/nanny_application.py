@@ -56,10 +56,8 @@ class NannyApplication(models.Model):
     insurance_cover_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
     insurance_cover_arc_flagged = models.BooleanField(default=False)
     declarations_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
-    references_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
     share_info_declare = models.NullBooleanField(blank=True, null=True, default=None)
-    display_contact_details_on_web = models.NullBooleanField(blank=True, null=True, default=None)
-    suitable_declare = models.NullBooleanField(blank=True, null=True, default=None)
+    follow_rules = models.NullBooleanField(blank=True, null=True, default=None)
     information_correct_declare = models.NullBooleanField(blank=True, null=True, default=None)
     change_declare = models.NullBooleanField(blank=True, null=True, default=None)
     date_created = models.DateTimeField(blank=True, null=True)
@@ -83,3 +81,17 @@ class NannyApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = NannyApplication
         fields = '__all__'
+
+    def get_bool_as_string(self, bool_field):
+        if bool_field:
+            return 'Yes'
+        else:
+            return 'No'
+
+    def get_summary_table(self):
+        address_tbp = self.get_bool_as_string(self.data['address_to_be_provided'])
+        return [
+                {"name": "Do you know where you will be working?", "value": address_tbp,
+                 'pk': self.data['application_id'], "index": 1,
+                 "reverse": "Childcare-Address-Where-You-Work"}
+            ]

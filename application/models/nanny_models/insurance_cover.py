@@ -26,3 +26,20 @@ class InsuranceCoverSerializer(serializers.ModelSerializer):
         model = InsuranceCover
         fields = '__all__'
 
+    def get_bool_as_string(self, bool_field):
+        if bool_field:
+            return 'Yes'
+        else:
+            return 'No'
+
+    def get_summary_table(self):
+        data = self.data
+        return [
+                {"title": "Insurance cover", "id": data['insurance_cover_id']},
+                {"name": "Do you have a public liability insurance?",
+                 "value": self.get_bool_as_string(data['public_liability']),
+                 'pk': data['insurance_cover_id'],
+                    "reverse": "insurance:Public-Liability"}
+            ]
+
+

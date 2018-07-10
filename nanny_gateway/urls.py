@@ -33,9 +33,13 @@ router.register(r'api/v1/dbs-check', views.DbsViewSet)
 router.register(r'api/v1/applicant-personal-details', views.ApplicantPersonalDetailsViewSet)
 router.register(r'api/v1/applicant-home-address', views.ApplicantHomeAddressViewSet)
 router.register(r'api/v1/insurance-cover', views.InsuranceCoverViewSet)
+router.register(r'api/v1/declaration', views.DeclarationViewSet)
 router.register(r'api/v1/payment', views.PaymentViewSet)
 
+
 urlpatterns = [
+    url(r'^api/v1/summary/(?P<name>\w+)/(?P<application_id>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$',
+        views.summary_table, name="Summary"),
     url(r'^schema/$', schema_view),
     url(r'^', include(router.urls)),
     url(r'^api/v1/application/application_reference/(?P<application_id>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$',

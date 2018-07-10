@@ -1,10 +1,10 @@
-from django.http import JsonResponse
-from rest_framework import viewsets, request, status
+from rest_framework import viewsets, status
 from django_filters import rest_framework as filters
-from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
+from rest_framework.decorators import api_view
+from django.http import JsonResponse
 
 from .models.nanny_models.dbs_check import DbsCheckSerializer, DbsCheck
 from .models.nanny_models.nanny_application import NannyApplication, NannyApplicationSerializer
@@ -12,10 +12,23 @@ from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, Payme
 from .models.nanny_models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
 from .models.nanny_models.applicant_personal_details import ApplicantPersonalDetails, \
     ApplicantPersonalDetailsSerializer
+
+from .models.nanny_models.declaration import Declaration, DeclarationSerializer
 from .models.nanny_models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
 from .models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
 from .models.nanny_models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
 from .application_reference_generator import create_application_reference
+
+
+serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
+               'applicant_personal_details': ApplicantPersonalDetailsSerializer,
+               'childcare_address': ChildcareAddressSerializer,
+               'childcare_training': ChildcareTrainingSerializer,
+               'dbs_check': DbsCheckSerializer,
+               'first_aid': FirstAidTrainingSerializer,
+               'insurance_cover': InsuranceCoverSerializer,
+               'application': NannyApplicationSerializer}
+
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -128,6 +141,14 @@ class InsuranceCoverViewSet(BaseViewSet):
         'application_id'
     )
 
+class DeclarationViewSet(BaseViewSet):
+
+    queryset = Declaration.objects.all()
+    serializer_class = DeclarationSerializer
+    filter_fields = (
+        'declaration_id',
+        'application_id'
+    )
 
 class PaymentViewSet(BaseViewSet):
 
@@ -140,6 +161,27 @@ class PaymentViewSet(BaseViewSet):
 
 
 @api_view(['GET'])
+def summary_table(request, name, application_id):
+    if request.method == 'GET':
+        if name in serializers.keys():
+            serializer = serializers[name]
+            model = serializer.Meta.model
+            records = model.objects.filter(application_id=application_id)
+            if name != "childcare_address":
+                if records:
+                    return JsonResponse(serializer(records[0]).get_summary_table(), safe=False)
+                else:
+                    return JsonResponse([], safe=False)
+            else:
+                summary_list = []
+                i = 1
+                summary_list.append(serializer().get_title_row())
+                for record in records:
+                    row = serializer(record).get_summary_table(i)
+                    summary_list.append(row)
+                    i += 1
+                return JsonResponse(summary_list, safe=False)
+
 def retrieve_reference_number(request, application_id):
     """
     Method for allocating a reference number to an application
@@ -170,4 +212,3 @@ def yield404(request):
     return Response({
         'error': 'The resource was not found'
     }, status=status.HTTP_404_NOT_FOUND)
-

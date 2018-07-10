@@ -2,7 +2,6 @@ from .base import *
 
 INSTALLED_APPS = BUILTIN_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
-PUBLIC_APPLICATION_URL = 'http://localhost:8000/nanny-gateway'
 
 # Automatic Django logging at the INFO level (i.e everything the comes to the console when ran locally)
 LOGGING = {

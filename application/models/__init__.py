@@ -1,3 +1,4 @@
+from .nanny_models.declaration import *
 from .nanny_models.nanny_application import *
 from .nanny_models.childcare_training import *
 from .nanny_models.childcare_address import *
