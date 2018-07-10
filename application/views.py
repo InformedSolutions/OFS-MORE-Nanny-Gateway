@@ -3,6 +3,7 @@ from django_filters import rest_framework as filters
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
+from rest_framework.decorators import api_view
 from django.http import JsonResponse
 
 from application.models.nanny_models.dbs_check import DbsCheckSerializer, DbsCheck
@@ -147,15 +148,14 @@ class DeclarationViewSet(BaseViewSet):
     )
 
 
-def summary_table(request):
+@api_view(['GET'])
+def summary_table(request, name, application_id):
     if request.method == 'GET':
-        model_name = request.GET['name']
-        app_id = request.GET['id']
-        if model_name in serializers.keys():
-            serializer = serializers[model_name]
+        if name in serializers.keys():
+            serializer = serializers[name]
             model = serializer.Meta.model
-            records = model.objects.filter(application_id=app_id)
-            if len(records) == 1:
+            records = model.objects.filter(application_id=application_id)
+            if name != "childcare_address":
                 return JsonResponse(serializer(records[0]).get_summary_table(), safe=False)
             else:
                 summary_list = []
