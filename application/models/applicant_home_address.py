@@ -1,7 +1,6 @@
 from uuid import uuid4
 
 from rest_framework import serializers
-from .base import ApiCalls
 from django.db import models
 from .nanny_application import NannyApplication
 from .applicant_personal_details import ApplicantPersonalDetails
@@ -13,7 +12,6 @@ class ApplicantHomeAddress(models.Model):
     """
     # Managers
     objects = models.Manager()
-    api = ApiCalls("applicant-home-address", "home_address_id")
 
     application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     personal_detail_id = models.ForeignKey(ApplicantPersonalDetails, on_delete=models.CASCADE,

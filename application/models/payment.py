@@ -4,7 +4,6 @@ Entity definition for payments made in relation to an application
 from uuid import uuid4
 
 from django.db import models
-from .base import ApiCalls
 from rest_framework import serializers
 
 from .nanny_application import NannyApplication

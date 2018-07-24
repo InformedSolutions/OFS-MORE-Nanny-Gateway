@@ -2,7 +2,6 @@ from uuid import uuid4
 from django.db import models
 from rest_framework import serializers
 
-from .base import ApiCalls
 from .nanny_application import NannyApplication
 
 
@@ -11,7 +10,7 @@ class Declaration(models.Model):
     Model for DECLARATION table
     """
     objects = models.Manager()
-    api = ApiCalls("declaration", 'declaration_id')
+
     declaration_id = models.UUIDField(primary_key=True, default=uuid4())
     application_id = models.ForeignKey(
         NannyApplication, on_delete=models.CASCADE, db_column='application_id')
