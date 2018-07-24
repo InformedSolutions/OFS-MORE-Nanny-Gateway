@@ -14,7 +14,6 @@ class Payment(models.Model):
     A model for tracking the capture and processing of payments
     """
     objects = models.Manager()
-    api = ApiCalls("payment", "application_id")
 
     # Unique payment record identifier
     payment_id = models.UUIDField(primary_key=True, default=uuid4)
