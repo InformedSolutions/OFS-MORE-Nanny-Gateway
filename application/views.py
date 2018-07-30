@@ -72,6 +72,7 @@ class NannyApplicationViewSet(BaseViewSet):
 
 
 class ChildcareAddressViewSet(BaseViewSet):
+    lookup_field = 'pk'
     queryset = ChildcareAddress.objects.all()
     serializer_class = ChildcareAddressSerializer
     filter_fields = (
