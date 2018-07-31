@@ -68,6 +68,7 @@ class NannyApplicationViewSet(BaseViewSet):
     serializer_class = NannyApplicationSerializer
     filter_fields = (
         'application_id',
+        'application_status'
     )
 
 
