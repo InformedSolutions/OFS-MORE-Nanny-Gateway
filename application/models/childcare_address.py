@@ -1,7 +1,6 @@
 from uuid import uuid4
 import inflect
 from rest_framework import serializers
-from .base import ApiCalls
 from django.db import models
 from .nanny_application import NannyApplication
 
@@ -12,7 +11,6 @@ class ChildcareAddress(models.Model):
     """
     # Managers
     objects = models.Manager()
-    api = ApiCalls("childcare-address", "childcare_address_id")
 
     application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     date_created = models.DateTimeField(blank=True, null=True)

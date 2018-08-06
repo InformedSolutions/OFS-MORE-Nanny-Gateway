@@ -1,7 +1,6 @@
 from uuid import uuid4
 
 from rest_framework import serializers
-from .base import ApiCalls
 from django.db import models
 from django.core.validators import RegexValidator
 
@@ -12,7 +11,7 @@ class NannyApplication(models.Model):
     """
     # Managers
     objects = models.Manager()
-    api = ApiCalls("application", "application_id")
+
     APP_STATUS = (
         ('ARC_REVIEW', 'ARC_REVIEW'),
         ('CANCELLED', 'CANCELLED'),

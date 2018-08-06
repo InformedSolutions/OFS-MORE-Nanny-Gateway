@@ -6,17 +6,17 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 
-from .models.nanny_models.dbs_check import DbsCheckSerializer, DbsCheck
-from .models.nanny_models.nanny_application import NannyApplication, NannyApplicationSerializer
+from application.models.dbs_check import DbsCheckSerializer, DbsCheck
+from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
 from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer
-from .models.nanny_models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
-from .models.nanny_models.applicant_personal_details import ApplicantPersonalDetails, \
+from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
+from application.models.applicant_personal_details import ApplicantPersonalDetails, \
     ApplicantPersonalDetailsSerializer
 
-from .models.nanny_models.declaration import Declaration, DeclarationSerializer
-from .models.nanny_models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
-from .models.nanny_models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
-from .models.nanny_models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
+from application.models.declaration import Declaration, DeclarationSerializer
+from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
+from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
+from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
 from .application_reference_generator import create_application_reference
 
 
@@ -46,6 +46,7 @@ class BaseViewSet(viewsets.ModelViewSet):
     destroy:
     Delete the application with the corresponding primary key (application_id) from the database
     """
+    lookup_field = 'application_id'
     filter_backends = (filters.DjangoFilterBackend, OrderingFilter,)
 
     def list(self, request, *args, **kwargs):
@@ -67,10 +68,12 @@ class NannyApplicationViewSet(BaseViewSet):
     serializer_class = NannyApplicationSerializer
     filter_fields = (
         'application_id',
+        'application_status'
     )
 
 
 class ChildcareAddressViewSet(BaseViewSet):
+    lookup_field = 'pk'
     queryset = ChildcareAddress.objects.all()
     serializer_class = ChildcareAddressSerializer
     filter_fields = (

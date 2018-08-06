@@ -21,11 +21,12 @@ from rest_framework_swagger.views import get_swagger_view
 from rest_framework.routers import DefaultRouter
 from application import views
 
+
 schema_view = get_swagger_view(title='OFS-MORE Nanny Gateway')
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
-router.register(r'api/v1/first_aid_training', views.FirstAidViewSet)
+router.register(r'api/v1/first-aid', views.FirstAidViewSet)
 router.register(r'api/v1/application', views.NannyApplicationViewSet)
 router.register(r'api/v1/childcare-training', views.ChildcareTrainingViewSet)
 router.register(r'api/v1/childcare-address', views.ChildcareAddressViewSet)

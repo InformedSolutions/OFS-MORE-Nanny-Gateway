@@ -4,7 +4,6 @@ Entity definition for payments made in relation to an application
 from uuid import uuid4
 
 from django.db import models
-from .base import ApiCalls
 from rest_framework import serializers
 
 from .nanny_application import NannyApplication
@@ -15,7 +14,6 @@ class Payment(models.Model):
     A model for tracking the capture and processing of payments
     """
     objects = models.Manager()
-    api = ApiCalls("payment", "application_id")
 
     # Unique payment record identifier
     payment_id = models.UUIDField(primary_key=True, default=uuid4)
