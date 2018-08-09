@@ -17,8 +17,7 @@ from application.models.declaration import Declaration, DeclarationSerializer
 from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
 from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
 from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
-from .application_reference_generator import create_application_reference
-
+from .services import noo_integration_service
 
 serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'applicant_personal_details': ApplicantPersonalDetailsSerializer,
@@ -198,7 +197,7 @@ def retrieve_reference_number(request, application_id):
         # If an application reference number has not yet been allocated
         # assign an persist value
         if application.application_reference is None:
-            application.application_reference = create_application_reference()
+            application.application_reference = noo_integration_service.create_application_reference()
             application.save()
 
         return JsonResponse({

@@ -91,6 +91,8 @@ DEBUG = True
 
 APP_NANNY_GATEWAY_URL = 'http://localhost:8000/nanny-gateway'
 
+INTEGRATION_ADAPTER_URL = os.environ.get('APP_INTEGRATION_ADAPTER')
+
 PUBLIC_APPLICATION_URL = os.environ.get('PUBLIC_APPLICATION_URL')
 
 URL_PREFIX = '/nanny-gateway'
