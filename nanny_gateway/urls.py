@@ -36,6 +36,8 @@ router.register(r'api/v1/applicant-home-address', views.ApplicantHomeAddressView
 router.register(r'api/v1/insurance-cover', views.InsuranceCoverViewSet)
 router.register(r'api/v1/declaration', views.DeclarationViewSet)
 router.register(r'api/v1/payment', views.PaymentViewSet)
+router.register(r'api/v1/arc-comments', views.ArcCommentsViewSet)
+
 
 
 urlpatterns = [

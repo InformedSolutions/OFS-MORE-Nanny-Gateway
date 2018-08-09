@@ -17,6 +17,7 @@ from application.models.declaration import Declaration, DeclarationSerializer
 from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
 from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
 from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
+from application.models.arc_comments import ArcComments, ArcCommentsSerializer
 from .application_reference_generator import create_application_reference
 
 
@@ -160,6 +161,15 @@ class PaymentViewSet(BaseViewSet):
     filter_fields = (
         'payment_id',
         'application_id'
+    )
+
+class ArcCommentsViewSet(BaseViewSet):
+    lookup_field = 'table_pk'
+    queryset = ArcComments.objects.all()
+    serializer_class = ArcComments
+    filter_fields = (
+        'table_pk',
+        'field_name',
     )
 
 
