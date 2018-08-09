@@ -1,5 +1,9 @@
+import json
+
 from django.conf import settings
 from django.test import TestCase
+from django.urls import reverse
+
 from ..models import NannyApplication
 from ..models import ApplicantPersonalDetails
 from ..models import ApplicantHomeAddress
@@ -31,7 +35,9 @@ class SummaryTests(TestCase):
             town="Town",
             postcode="Postcode")
 
-        url = prefix + '/api/v1/summary/applicant_home_address/' + str(app_id)
-        response = self.client.get(url)
+        get_endpoint = reverse('Summary', kwargs={'name': 'applicant_home_address', 'application_id': app_id})
+        response = self.client.get(get_endpoint)
 
-        self.assertEqual(301, response.status_code)
+        summary_table = json.loads(response.content)
+        self.assertEqual(summary_table[0].get('name'), 'Your home address')
+        self.assertEqual(200, response.status_code)
