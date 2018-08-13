@@ -164,10 +164,11 @@ class PaymentViewSet(BaseViewSet):
     )
 
 class ArcCommentsViewSet(BaseViewSet):
-    lookup_field = 'table_pk'
+    lookup_field = 'id'
     queryset = ArcComments.objects.all()
     serializer_class = ArcCommentsSerializer
     filter_fields = (
+        'id',
         'table_pk',
         'field_name',
     )
