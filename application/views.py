@@ -28,8 +28,8 @@ serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'dbs_check': DbsCheckSerializer,
                'first_aid': FirstAidTrainingSerializer,
                'insurance_cover': InsuranceCoverSerializer,
-               'application': NannyApplicationSerializer}
-
+               'application': NannyApplicationSerializer,
+               'arc_comments': ArcCommentsSerializer}
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -166,7 +166,7 @@ class PaymentViewSet(BaseViewSet):
 class ArcCommentsViewSet(BaseViewSet):
     lookup_field = 'table_pk'
     queryset = ArcComments.objects.all()
-    serializer_class = ArcComments
+    serializer_class = ArcCommentsSerializer
     filter_fields = (
         'table_pk',
         'field_name',
