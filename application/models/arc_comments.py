@@ -9,7 +9,8 @@ class ArcComments(models.Model):
     """
     objects = models.Manager()
 
-    review_id = models.UUIDField(primary_key=True, default=uuid4, unique=True),
+    review_id = models.UUIDField(primary_key=True, default=uuid4, unique=True)
+    application_id = models.UUIDField(blank=True)
     table_pk = models.UUIDField(blank=True)
     table_name = models.CharField(max_length=30, blank=True)
     field_name = models.CharField(max_length=40, blank=True)
