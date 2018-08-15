@@ -18,6 +18,7 @@ from application.models.applicant_home_address import ApplicantHomeAddress, Appl
 from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
 from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
 from .services import noo_integration_service
+import logging
 
 serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'applicant_personal_details': ApplicantPersonalDetailsSerializer,
@@ -28,6 +29,7 @@ serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'insurance_cover': InsuranceCoverSerializer,
                'application': NannyApplicationSerializer}
 
+logger = logging.getLogger(__name__)
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -196,13 +198,17 @@ def retrieve_reference_number(request, application_id):
 
         # If an application reference number has not yet been allocated
         # assign an persist value
-        if application.application_reference is None:
-            application.application_reference = noo_integration_service.create_application_reference()
-            application.save()
+        try:
+            if application.application_reference is None:
+                application.application_reference = noo_integration_service.create_application_reference()
+                application.save()
 
-        return JsonResponse({
-            'reference': application.application_reference
-        })
+            return JsonResponse({
+                'reference': application.application_reference
+            })
+        except Exception as e:
+            logger.error('Failed to allocate application reference number: ' + str(e))
+            return yield503(request)
     except NannyApplication.DoesNotExist:
         return yield404(request)
 
@@ -216,3 +222,14 @@ def yield404(request):
     return Response({
         'error': 'The resource was not found'
     }, status=status.HTTP_404_NOT_FOUND)
+
+
+def yield503(request):
+    """
+    Custom handler to yield a JSON object with a 404 status code
+    :param request: the inbound HTTP request
+    :return: An http response comprised of a descriptive error and a 404 status code
+    """
+    return Response({
+        'error': 'The service was unavailable'
+    }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
