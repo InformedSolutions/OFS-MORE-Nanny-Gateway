@@ -11,9 +11,8 @@ class Declaration(models.Model):
     """
     objects = models.Manager()
 
-    declaration_id = models.UUIDField(primary_key=True, default=uuid4())
-    application_id = models.ForeignKey(
-        NannyApplication, on_delete=models.CASCADE, db_column='application_id')
+    declaration_id = models.UUIDField(primary_key=True, default=uuid4)
+    application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     register_rules = models.NullBooleanField(blank=True, null=True)
     share_information = models.NullBooleanField(blank=True, null=True)
     information_correct = models.NullBooleanField(blank=True, null=True)
