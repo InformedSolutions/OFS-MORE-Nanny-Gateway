@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='arccomments',
             name='application_id',
-            field=models.UUIDField(blank=True, default=1),
+            field=models.UUIDField(blank=True, default=uuid.uuid4()),
             preserve_default=False,
         ),
         migrations.AddField(
