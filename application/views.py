@@ -17,6 +17,7 @@ from application.models.declaration import Declaration, DeclarationSerializer
 from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
 from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
 from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
+from application.models.arc_comments import ArcComments, ArcCommentsSerializer
 from .application_reference_generator import create_application_reference
 
 
@@ -27,8 +28,8 @@ serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'dbs_check': DbsCheckSerializer,
                'first_aid': FirstAidTrainingSerializer,
                'insurance_cover': InsuranceCoverSerializer,
-               'application': NannyApplicationSerializer}
-
+               'application': NannyApplicationSerializer,
+               'arc_comments': ArcCommentsSerializer}
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -160,6 +161,16 @@ class PaymentViewSet(BaseViewSet):
     filter_fields = (
         'payment_id',
         'application_id'
+    )
+
+class ArcCommentsViewSet(BaseViewSet):
+    lookup_field = 'review_id'
+    queryset = ArcComments.objects.all()
+    serializer_class = ArcCommentsSerializer
+    filter_fields = (
+        'review_id',
+        'table_pk',
+        'field_name',
     )
 
 
