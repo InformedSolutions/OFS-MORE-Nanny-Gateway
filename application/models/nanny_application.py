@@ -7,12 +7,13 @@ from django.core.validators import RegexValidator
 
 class NannyApplication(models.Model):
     """
-        Model for Nanny Application table
+    Model for Nanny Application table
     """
     # Managers
     objects = models.Manager()
 
     APP_STATUS = (
+        ('ACCEPTED', 'ACCEPTED'),
         ('ARC_REVIEW', 'ARC_REVIEW'),
         ('CANCELLED', 'CANCELLED'),
         ('CYGNUM_REVIEW', 'CYGNUM_REVIEW'),
