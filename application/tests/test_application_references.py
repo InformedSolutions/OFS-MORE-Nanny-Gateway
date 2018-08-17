@@ -8,7 +8,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 
-from ..models import ApplicationReference, NannyApplication, json
+from ..models import ApplicationReference, NannyApplication
 from ..application_reference_generator import create_application_reference, allocate_reference_number
 from ..views import retrieve_reference_number
 
