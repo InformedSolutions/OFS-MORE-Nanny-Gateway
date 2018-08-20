@@ -47,9 +47,12 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
                 {"title": "Your personal details", "id": data['personal_detail_id'], "index": 0},
                 {"name": "Full name",
                  "value": self.get_name(),
-                 'pk': data['personal_detail_id'], "index": 2,
+                 'pk': data['personal_detail_id'], "index": 1,
                  "reverse": "personal-details:Personal-Details-Name"},
                 {"name": "Date of birth",
                  "value": str(data['date_of_birth']), 'pk': data['personal_detail_id'], "index": 2,
-                 "reverse": "personal-details:Personal-Details-Date-Of-Birth"}
+                 "reverse": "personal-details:Personal-Details-Date-Of-Birth"},
+                {"name": "Have you lived outside of the UK in the last 5 years?",
+                 "value": 'Yes' if data['lived_abroad'] else 'No', 'pk': data['personal_detail_id'], "index": 4,
+                 "reverse": "personal-details:Personal-Details-Lived-Abroad"}
             ]

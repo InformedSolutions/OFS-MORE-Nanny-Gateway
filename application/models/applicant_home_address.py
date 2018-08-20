@@ -57,10 +57,12 @@ class ApplicantHomeAddressSerializer(serializers.ModelSerializer):
         home_address = self.get_address()
         return [
                 {"name": "Your home address", "value": home_address, 'pk': data['home_address_id'], "index": 3,
+                 "section": "applicant_personal_details_section",
                  "reverse": "personal-details:Personal-Details-Manual-Address"},
-                {"name": "Is this where you will look after the children?",
+                {"name": "Will you work and live at the same address?",
                  "value": self.get_bool_as_string(data['childcare_address']),
-                 'pk': data['home_address_id'], "index": 4,
+                 "section": "childcare_address_section",
+                 'pk': data['home_address_id'], "index": 1,
                  "reverse": "Childcare-Address-Location"}
             ]
 
