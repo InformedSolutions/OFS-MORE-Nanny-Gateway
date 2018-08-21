@@ -170,7 +170,8 @@ class ArcCommentsViewSet(BaseViewSet):
     filter_fields = (
         'review_id',
         'table_pk',
-        'field_name',
+        'field_name',,
+        'application_id',
     )
 
 
