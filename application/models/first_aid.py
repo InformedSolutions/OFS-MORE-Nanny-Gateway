@@ -42,8 +42,6 @@ class FirstAidTrainingSerializer(serializers.ModelSerializer):
         course_month = course_date_list[1]
         course_year = course_date_list[0]
         course_date = course_day + '/' + course_month + '/' + course_year
-        valid = True if len(data['training_organisation']) and len(data['course_title']) and len(data['course_date']) \
-            else False
         return [
                 {"title": "First aid training", "id": data['first_aid_id'], "index": 0},
                 {"name": "Training organisation",
