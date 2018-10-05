@@ -37,12 +37,25 @@ class FirstAidTrainingSerializer(serializers.ModelSerializer):
 
     def get_summary_table(self):
         data = self.data
+        course_date_list = str(data['course_date']).split('-')
+        course_day = course_date_list[2]
+        course_month = course_date_list[1]
+        course_year = course_date_list[0]
+        course_date = course_day + ' ' + course_month + ' ' + course_year
         valid = True if len(data['training_organisation']) and len(data['course_title']) and len(data['course_date']) \
             else False
         return [
-                {"title": "First aid qualification", "id": data['first_aid_id']},
-                {"name": "Do you have a valid first aid qualification?",
-                 "value": self.get_bool_as_string(valid),
-                 'pk': data['first_aid_id'],
-                    "reverse": "first-aid:Training-Details"}
+                {"title": "First aid training", "id": data['first_aid_id'], "index": 0},
+                {"name": "Training organisation",
+                 "value": data['training_organisation'],
+                 'pk': data['first_aid_id'], "index": 1,
+                 "reverse": "first-aid:Training-Details"},
+                {"name": "Title of training course",
+                 "value": data['course_title'],
+                 'pk': data['first_aid_id'], "index": 2,
+                 "reverse": "first-aid:Training-Details"},
+                {"name": "Date you completed course",
+                 "value": course_date,
+                 'pk': data['first_aid_id'], "index": 3,
+                 "reverse": "first-aid:Training-Details"}
             ]
