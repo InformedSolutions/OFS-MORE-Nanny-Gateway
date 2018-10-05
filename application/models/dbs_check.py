@@ -38,7 +38,7 @@ class DbsCheckSerializer(serializers.ModelSerializer):
             {"title": "Criminal record (DBS) check", "id": fields['dbs_id']},
             {"name": "DBS certificate number", "value": fields['dbs_number'],
              "reverse": "dbs:Details"},
-            {"name": "Do you have any cautions or convictions?",
+            {"name": "Do you have any criminal cautions or convictions?",
              "value": self.get_bool_as_string(fields['convictions']),
              "reverse": "dbs:Details"}
         ]
