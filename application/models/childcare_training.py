@@ -57,5 +57,6 @@ class ChildcareTrainingSerializer(serializers.ModelSerializer):
                 {"name": "What type of childcare course have you completed?",
                  "value": childcare_training,
                  'pk': data['childcare_training_id'],
-                 "reverse": "Type-Of-Childcare-Training"}
+                 "reverse": "Type-Of-Childcare-Training",
+                 "change_link_description": "course type"}
             ]

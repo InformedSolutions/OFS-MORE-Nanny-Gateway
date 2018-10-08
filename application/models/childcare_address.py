@@ -56,4 +56,5 @@ class ChildcareAddressSerializer(serializers.ModelSerializer):
         childcare_address = self.get_address()
         row_name = "Childcare address " + str(i)
         return {"name": row_name, "value": childcare_address, 'pk': self.data['childcare_address_id'],
-                "reverse": "Childcare-Address-Manual-Entry", 'index': i+1}
+                "reverse": "Childcare-Address-Manual-Entry", 'index': i+1,
+                "change_link_description": "childcare address " + str(i)}

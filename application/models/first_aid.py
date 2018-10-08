@@ -47,13 +47,16 @@ class FirstAidTrainingSerializer(serializers.ModelSerializer):
                 {"name": "Training organisation",
                  "value": data['training_organisation'],
                  'pk': data['first_aid_id'], "index": 1,
-                 "reverse": "first-aid:Training-Details"},
+                 "reverse": "first-aid:Training-Details",
+                 "change_link_description": "training organisation"},
                 {"name": "Title of training course",
                  "value": data['course_title'],
                  'pk': data['first_aid_id'], "index": 2,
-                 "reverse": "first-aid:Training-Details"},
+                 "reverse": "first-aid:Training-Details",
+                 "change_link_description": "course title"},
                 {"name": "Date you completed course",
                  "value": course_date,
                  'pk': data['first_aid_id'], "index": 3,
-                 "reverse": "first-aid:Training-Details"}
+                 "reverse": "first-aid:Training-Details",
+                 "change_link_description": "course completion date"}
             ]
