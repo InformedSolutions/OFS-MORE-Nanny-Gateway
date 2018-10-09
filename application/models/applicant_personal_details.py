@@ -25,6 +25,10 @@ class ApplicantPersonalDetails(models.Model):
     def get_id(cls, personal_detail_id):
         return cls.objects.get(pk=personal_detail_id)
 
+    @property
+    def get_full_name(self):
+        return "{0}{1} {2}".format(self.first_name, (" "+self.middle_names if self.middle_names else ""), self.last_name)
+
     class Meta:
         db_table = 'APPLICANT_PERSONAL_DETAILS'
 
