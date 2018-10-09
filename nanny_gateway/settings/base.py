@@ -31,7 +31,8 @@ GOVUK_SERVICE_SETTINGS = {
 
 THIRD_PARTY_APPS = [
     'rest_framework_swagger',
-    'django_filters'
+    'django_filters',
+    'timeline_logger'
 ]
 
 
