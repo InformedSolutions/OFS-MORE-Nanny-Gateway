@@ -35,10 +35,11 @@ class InsuranceCoverSerializer(serializers.ModelSerializer):
         data = self.data
         return [
                 {"title": "Insurance cover", "id": data['insurance_cover_id']},
-                {"name": "Do you have a public liability insurance?",
+                {"name": "Do you have public liability insurance?",
                  "value": self.get_bool_as_string(data['public_liability']),
                  'pk': data['insurance_cover_id'],
-                    "reverse": "insurance:Public-Liability"}
+                 "reverse": "insurance:Public-Liability",
+                 "change_link_description": "answer on having public liability insurance"}
             ]
 
 
