@@ -9,11 +9,6 @@ from application import models
 def timeline_log_pre_save(sender, instance, raw, using, update_fields, **kwargs):
     """
     Receiver function for the timeline logger when post_save() is called on a model which is tracked.
-    :param sender:
-    :param model_instance:
-    :param created:
-    :param kwargs:
-    :return:
     """
     try:
         current_application_status = models.NannyApplication.objects.get(pk=instance.application_id).application_status
@@ -25,6 +20,9 @@ def timeline_log_pre_save(sender, instance, raw, using, update_fields, **kwargs)
             timeline_log without this field in your model.
             ------------------------------------------------------------------
         ''')
+    # If the application does not exist, conclude that application is being created.
+    except models.NannyApplication.DoesNotExist:
+        return __handle_created_application(instance)
 
     # Check if NannyApplication has been updated. If so, check if applicant has submitted or resubmitted the application
     # The ARC user returning an application is handled manually in ARC.
@@ -48,6 +46,15 @@ def timeline_log_pre_save(sender, instance, raw, using, update_fields, **kwargs)
 
             for field in update_fields:
                 __handle_updated_field(instance, current_application_status, field)
+
+
+def __handle_created_application(instance):
+    TimelineLog.objects.create(
+        content_object=instance,
+        user=None,
+        template='timeline_logger/application_action.txt',
+        extra_data={'user_type': 'applicant', 'action': 'created by', 'entity': 'application'}
+    )
 
 
 def __handle_submitted_application(instance):
