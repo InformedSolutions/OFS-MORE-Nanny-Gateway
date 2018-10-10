@@ -1,15 +1,40 @@
 from django.test import TestCase
 
+from timeline_logger.models import TimelineLog
+
+from application import models
+
 
 class NannyAuditLogsTests(TestCase):
-    def test_post_to_timeline_log_creates_instance(self):
-        self.skipTest('NotImplemented')
-
     def test_creating_application_creates_timeline_log(self):
-        self.skipTest('NotImplemented')
+        application = models.NannyApplication.objects.create()
+        timeline_qset = TimelineLog.objects.filter(object_id=application.pk)
+
+        self.assertTrue(timeline_qset.exists())
+        self.assertEqual(timeline_qset[0].extra_data['action'], 'created by')
+        self.assertEqual(len(timeline_qset), 1)
 
     def test_submitting_application_creates_timeline_log(self):
-        self.skipTest('NotImplemented')
+        application = models.NannyApplication.objects.create(application_status='DRAFTING')
+        application.application_status = 'SUBMITTED'
+        application.save()
+
+        timeline_qset = TimelineLog.objects.filter(object_id=application.pk)
+
+        self.assertTrue(timeline_qset.exists())
+        self.assertEqual(timeline_qset[1].extra_data['action'], 'submitted by')
+        self.assertEqual(len(timeline_qset), 2)
+
+    def test_resubmitting_application_creates_timeline_log(self):
+        application = models.NannyApplication.objects.create(application_status='FURTHER_INFORMATION')
+        application.application_status = 'SUBMITTED'
+        application.save()
+
+        timeline_qset = TimelineLog.objects.filter(object_id=application.pk)
+
+        self.assertTrue(timeline_qset.exists())
+        self.assertEqual(timeline_qset[1].extra_data['action'], 'resubmitted by')
+        self.assertEqual(len(timeline_qset), 2)
 
     def test_returning_application_creates_timeline_log(self):
         self.skipTest('NotImplemented')
