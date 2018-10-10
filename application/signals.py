@@ -27,6 +27,7 @@ def timeline_log_pre_save(sender, instance, raw, using, update_fields, **kwargs)
         ''')
 
     # Check if NannyApplication has been updated. If so, check if applicant has submitted or resubmitted the application
+    # The ARC user returning an application is handled manually in ARC.
     if isinstance(instance, models.NannyApplication):
         new_application_status = instance.application_status
 
@@ -40,19 +41,43 @@ def timeline_log_pre_save(sender, instance, raw, using, update_fields, **kwargs)
         # Grab instance's existing data from the database.
         old_instance = instance._meta.default_manager.get(pk=instance.pk)
 
+        # Check which fields the applicant has updated in a returned application.
         if current_application_status == 'FURTHER_INFORMATION':
             # update_fields does not appear to be set in the Serializer save() method so will loop through all attrs instead.
             update_fields = [field for field in instance.timelog_fields if getattr(instance, field) != getattr(old_instance, field)]
 
             for field in update_fields:
-                __handle_updated_field(field)
+                __handle_updated_field(instance, current_application_status, field)
 
 
 def __handle_submitted_application(instance):
-    pass
+    TimelineLog.objects.create(
+        content_object=instance,
+        user=None,
+        template='timeline_logger/application_action.txt',
+        extra_data={'user_type': 'applicant', 'action': 'submitted by', 'entity': 'application'}
+    )
+
 
 def __handle_resubmitted_application(instance):
-    pass
+    TimelineLog.objects.create(
+        content_object=instance,
+        user=None,
+        template='timeline_logger/application_action.txt',
+        extra_data={'user_type': 'applicant', 'action': 'resubmitted by', 'entity': 'application'}
+    )
 
-def __handle_updated_field(field):
-    pass
+
+def __handle_updated_field(instance, current_application_status, field):
+    TimelineLog.objects.create(
+        content_object=instance.application_id,
+        user=None,
+        template='timeline_logger/application_field.txt',
+        extra_data={
+            'user_type': 'applicant',
+            'application_status': current_application_status,
+            'field': field,
+            'formatted_field': field.replace("_", " "),
+            'action': 'updated'
+        }
+    )
