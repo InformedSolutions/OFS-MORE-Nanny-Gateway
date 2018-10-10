@@ -1,11 +1,19 @@
+from django.conf import settings
 from django.test import TestCase
 
+from rest_framework.test import APIRequestFactory, RequestsClient
 from timeline_logger.models import TimelineLog
 
 from application import models
 
 
 class NannyAuditLogsTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(NannyAuditLogsTests, cls).setUpClass()
+        cls.factory = APIRequestFactory()
+        cls.client = RequestsClient()
+
     def test_creating_application_creates_timeline_log(self):
         application = models.NannyApplication.objects.create()
         timeline_qset = TimelineLog.objects.filter(object_id=application.pk)
@@ -58,7 +66,17 @@ class NannyAuditLogsTests(TestCase):
         self.skipTest('NotImplemented')
 
     def test_post_to_timeline_log_endpoint_creates_timeline_log(self):
-        self.skipTest('NotImplemented')
+        response = self.client.post(
+            settings.PUBLIC_APPLICATION_URL + '/api/v1/timeline-log/',
+            data={
+                'object_id': '3141592654',
+            }
+        )
+
+        timeline_qset = TimelineLog.objects.filter(object_id='3141592654')
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(timeline_qset.exists())
 
     def test_list_request_to_timeline_log_endpoint_returns_associated_timeline_logs_only(self):
         self.skipTest('NotImplemented')
