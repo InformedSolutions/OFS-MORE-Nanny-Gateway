@@ -47,7 +47,7 @@ BUILTIN_APPS = [
 ]
 
 PROJECT_APPS = [
-    'application'
+    'application.apps.ApplicationConfig'
 ]
 
 MIDDLEWARE = [
