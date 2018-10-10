@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import mixins, viewsets, status
 from django_filters import rest_framework as filters
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
@@ -6,12 +6,15 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 
+from timeline_logger.models import TimelineLog
+
 from application.models.dbs_check import DbsCheckSerializer, DbsCheck
 from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
 from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer
 from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
 from application.models.applicant_personal_details import ApplicantPersonalDetails, \
     ApplicantPersonalDetailsSerializer
+from application.models.timeline_log import TimelineLogSerializer
 
 from application.models.declaration import Declaration, DeclarationSerializer
 from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
@@ -172,6 +175,14 @@ class ArcCommentsViewSet(BaseViewSet):
         'table_pk',
         'field_name',
         'application_id',
+    )
+
+
+class TimeLineLogViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin):
+    queryset = TimelineLog.objects.all()
+    serializer_class = TimelineLogSerializer
+    filter_fields = (
+        'object_id',
     )
 
 
