@@ -24,10 +24,10 @@ def get_nannies_query(name, date_of_birth, home_postcode, care_location_postcode
         query.add(Q(applicanthomeaddress__postcode__icontains=home_postcode), Q.AND)
 
     if care_location_postcode:
-        query.add(Q(childcareaddress__icontains=care_location_postcode), Q.AND)
+        query.add(Q(childcareaddress__postcode__icontains=care_location_postcode), Q.AND)
 
     if application_reference:
-        query.add(Q(nannyapplication__application_reference__icontains=application_reference), Q.AND)
+        query.add(Q(application_reference__icontains=application_reference), Q.AND)
 
     return query
 
@@ -35,63 +35,12 @@ def get_nannies_query(name, date_of_birth, home_postcode, care_location_postcode
 def get_dob_query(dob):
     split_dob = re.split(r"[^0-9]", dob)
 
-    if len(split_dob) == 1:
-        # If only one DOB part has been supplied assume it could be day month or year
+    if split_dob is not None:
+        dob_query = Q()
+        for dob_str in split_dob:
+            dob_query.add(Q(applicantpersonaldetails__date_of_birth__icontains=int(dob_str)), Q.AND)
 
-        # Create four digit year if 2 digit year supplied
-        if len(split_dob[0]) == 2:
-            previous_century_year = str(19) + split_dob[0]
-            current_century_year = str(20) + split_dob[0]
-        else:
-            # Otherwise allow longer values to be directly issued against query
-            previous_century_year = split_dob[0]
-            current_century_year = split_dob[0]
-
-        return Q(
-            Q(applicantpersonaldetails__birth_day=int(split_dob[0])) |
-            Q(applicantpersonaldetails__birth_month=int(split_dob[0])) |
-            Q(applicantpersonaldetails__birth_year=int(previous_century_year)) |
-            Q(applicantpersonaldetails__birth_year=int(current_century_year))
-        )
-
-    elif len(split_dob) == 2:
-        # If two DOBs part have been supplied, again assume second part is either a month or a year
-
-        # Create four digit year if 2 digit year supplied
-        if len(split_dob[1]) == 2:
-            previous_century_year = str(19) + split_dob[1]
-            current_century_year = str(20) + split_dob[1]
-        else:
-            # Otherwise allow longer values to be directly issued against query
-            previous_century_year = split_dob[1]
-            current_century_year = split_dob[1]
-
-        return Q(
-            Q(applicantpersonaldetails__birth_day=int(split_dob[0])),
-            Q(applicantpersonaldetails__birth_month=int(split_dob[0])) |
-            Q(applicantpersonaldetails__birth_month=int(split_dob[1])) |
-            Q(applicantpersonaldetails__birth_year=int(previous_century_year)) |
-            Q(applicantpersonaldetails__birth_year=int(current_century_year))
-        )
-
-    elif len(split_dob) == 3:
-
-        # Create four digit year if 2 digit year supplied
-        if len(split_dob[2]) == 2:
-            previous_century_year = str(19) + split_dob[2]
-            current_century_year = str(20) + split_dob[2]
-        else:
-            # Otherwise allow longer values to be directly issued against query
-            previous_century_year = split_dob[2]
-            current_century_year = split_dob[2]
-
-        return Q(
-            Q(applicantpersonaldetails__birth_day=int(split_dob[0])),
-            Q(applicantpersonaldetails__birth_month=int(split_dob[0])) |
-            Q(applicantpersonaldetails__birth_month=int(split_dob[1])) |
-            Q(applicantpersonaldetails__birth_year=int(previous_century_year)) |
-            Q(applicantpersonaldetails__birth_year=int(current_century_year))
-        )
+        return dob_query
 
     else:
         return None
