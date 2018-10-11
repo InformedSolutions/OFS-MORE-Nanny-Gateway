@@ -11,7 +11,6 @@ class NannyAuditLogsTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super(NannyAuditLogsTests, cls).setUpClass()
-        cls.factory = APIRequestFactory()
         cls.client = RequestsClient()
 
     def test_creating_application_creates_timeline_log(self):
@@ -79,4 +78,16 @@ class NannyAuditLogsTests(TestCase):
         self.assertTrue(timeline_qset.exists())
 
     def test_list_request_to_timeline_log_endpoint_returns_associated_timeline_logs_only(self):
-        self.skipTest('NotImplemented')
+        instance_1 = models.NannyApplication.objects.create()
+        instance_2 = models.NannyApplication.objects.create()
+
+        response = self.client.get(
+            settings.PUBLIC_APPLICATION_URL + '/api/v1/timeline-log/',
+            data={
+                'object_id': str(instance_1.pk),
+            }
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['object_id'], str(instance_1.pk))
