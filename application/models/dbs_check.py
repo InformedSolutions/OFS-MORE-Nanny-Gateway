@@ -17,6 +17,17 @@ class DbsCheck(models.Model):
     dbs_number = models.CharField(max_length=100)
     convictions = models.NullBooleanField(blank=True, null=True, default=None)
 
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'dbs_number',
+            'convictions'
+        )
+
     class Meta:
         db_table = 'DBS_CHECK'
 

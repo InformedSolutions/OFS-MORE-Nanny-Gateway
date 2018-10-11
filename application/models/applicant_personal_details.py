@@ -7,7 +7,7 @@ from .nanny_application import NannyApplication
 
 class ApplicantPersonalDetails(models.Model):
     """
-        Model for Nanny Application table
+    Model for APPLICANT_PERSONAL_DETAILS table
     """
     # Managers
     objects = models.Manager()
@@ -20,6 +20,20 @@ class ApplicantPersonalDetails(models.Model):
     last_name = models.CharField(blank=True, null=True, max_length=100)
     lived_abroad = models.NullBooleanField(blank=True, null=True)
     post_certificate_declaration = models.NullBooleanField(blank=True, null=True)
+
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'date_of_birth',
+            'first_name',
+            'middle_names',
+            'last_name',
+            'lived_abroad'
+        )
 
     @classmethod
     def get_id(cls, personal_detail_id):

@@ -7,7 +7,7 @@ from .nanny_application import NannyApplication
 
 class ChildcareAddress(models.Model):
     """
-        Model for Nanny Application table
+    Model for CHILDCARE_ADDRESS table.
     """
     # Managers
     objects = models.Manager()

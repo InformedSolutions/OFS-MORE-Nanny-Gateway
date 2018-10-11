@@ -8,7 +8,7 @@ from .nanny_application import NannyApplication
 
 class ChildcareTraining(models.Model):
     """
-    Model for Childcare Training table.
+    Model for CHILDCARE_TRAINING table.
     """
     objects = models.Manager()
 
@@ -17,6 +17,18 @@ class ChildcareTraining(models.Model):
     level_2_training = models.NullBooleanField(blank=True, null=True, default=None)
     common_core_training = models.NullBooleanField(blank=True, null=True, default=None)
     no_training = models.NullBooleanField(blank=True, null=True, default=None)
+
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'level_2_training',
+            'common_core_training',
+            'no_training'
+        )
 
     @classmethod
     def get_id(cls, app_id):
