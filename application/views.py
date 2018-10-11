@@ -201,13 +201,34 @@ class ArcSearchListView(ListOnlyViewSet):
             {'application_id': query.application_id,
              'application_reference': query.application_reference,
              'application_type': 'Nanny',
-             'applicant_name': ApplicantPersonalDetails.objects.get(application_id=query.application_id).get_full_name,
-             'date_submitted': query.date_submitted,
-             'date_accessed': query.date_updated,
+             'applicant_name': self.__get_applicant_name(query.application_id),
+             'date_submitted': self.__format_date(query.date_submitted),
+             'date_accessed': self.__format_date(query.date_updated),
              'submission_type': query.application_status}
             for query in nannies_queryset]
 
         return Response(response_dict)
+
+    @staticmethod
+    def __get_applicant_name(app_id):
+        if ApplicantPersonalDetails.objects.filter(application_id=app_id).exists():
+            applicant_person_details_record = ApplicantPersonalDetails.objects.get(application_id=app_id)
+
+            first_name = applicant_person_details_record.first_name
+            last_name = applicant_person_details_record.last_name
+
+            return "{0} {1}".format(first_name, last_name)
+
+        else:
+            return ""
+
+    @staticmethod
+    def __format_date(datetime) -> str:
+        if datetime:
+            return datetime.strftime('%d/%m/%Y')
+        else:
+            return ""
+
 
     @staticmethod
     def __get_query_params(request):
