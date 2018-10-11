@@ -1,6 +1,8 @@
 import sys
 import traceback
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from timeline_logger.models import TimelineLog
 
 from application import models
@@ -21,7 +23,7 @@ def timeline_log_pre_save(sender, instance, raw, using, update_fields, **kwargs)
             ------------------------------------------------------------------
         ''')
     # If the application does not exist, conclude that application is being created.
-    except models.NannyApplication.DoesNotExist:
+    except ObjectDoesNotExist:
         return __handle_created_application(instance)
 
     # Check if NannyApplication has been updated. If so, check if applicant has submitted or resubmitted the application
