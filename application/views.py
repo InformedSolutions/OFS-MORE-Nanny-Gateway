@@ -182,6 +182,10 @@ class ListOnlyViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 
 class ArcSearchListView(ListOnlyViewSet):
+    """
+    A viewset containing a list() function.
+    Implemented to allow for search queries on the Nanny DB.
+    """
     queryset = NannyApplication.objects.all()
 
     def list(self, request, *args, **kwargs):
@@ -211,6 +215,11 @@ class ArcSearchListView(ListOnlyViewSet):
 
     @staticmethod
     def __get_applicant_name(app_id):
+        """
+        Returns an applicant's first_name, last_name
+        :param app_id: Applicant's id
+        :return: String
+        """
         if ApplicantPersonalDetails.objects.filter(application_id=app_id).exists():
             applicant_person_details_record = ApplicantPersonalDetails.objects.get(application_id=app_id)
 
@@ -224,6 +233,11 @@ class ArcSearchListView(ListOnlyViewSet):
 
     @staticmethod
     def __format_date(datetime) -> str:
+        """
+        Converts datetime to string in displayable format DD/MM/YYYY
+        :param datetime: datetime object or None
+        :return: String
+        """
         if datetime:
             return datetime.strftime('%d/%m/%Y')
         else:
@@ -232,6 +246,11 @@ class ArcSearchListView(ListOnlyViewSet):
 
     @staticmethod
     def __get_query_params(request):
+        """
+        Extracts specific information from the request query_params.
+        :param request: request object, containing query_params.
+        :return: Tuple of sent data.
+        """
         name = request.query_params.get('name')
         date_of_birth = request.query_params.get('date_of_birth')
         home_postcode = request.query_params.get('home_postcode')
@@ -242,6 +261,10 @@ class ArcSearchListView(ListOnlyViewSet):
 
     @staticmethod
     def __query_nannies(name, date_of_birth, home_postcode, care_location_postcode, application_reference):
+        """
+        Calls get_nannies_query, an external function that constructs a Q object.
+        :return: A filtered NannyApplication queryset
+        """
         query = get_nannies_query(name, date_of_birth, home_postcode, care_location_postcode, application_reference)
 
         return NannyApplication.objects.filter(query)

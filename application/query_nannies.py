@@ -3,7 +3,12 @@ import re
 from django.db.models import Q
 
 
-def get_nannies_query(name, date_of_birth, home_postcode, care_location_postcode, application_reference):
+def get_nannies_query(name: str, date_of_birth: str, home_postcode: str, care_location_postcode: str,
+                      application_reference: str) -> Q:
+    """
+    Constructs a Q object based on the given parameters.
+    :return: Q query.
+    """
     query = Q()
 
     if name:
