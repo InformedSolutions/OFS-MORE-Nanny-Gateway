@@ -20,6 +20,8 @@ class ApplicantPersonalDetails(models.Model):
     last_name = models.CharField(blank=True, null=True, max_length=100)
     lived_abroad = models.NullBooleanField(blank=True, null=True)
     post_certificate_declaration = models.NullBooleanField(blank=True, null=True)
+    your_children = models.NullBooleanField(blank=True, null=True)
+
 
     @classmethod
     def get_id(cls, personal_detail_id):
@@ -89,6 +91,12 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
                  "change_link_description": "your date of birth"},
                 {"name": "Have you lived abroad in the last 5 years?",
                  "value": 'Yes' if data['lived_abroad'] else 'No', 'pk': data['personal_detail_id'], "index": 4,
-                 "reverse": "personal-details:Personal-Details-Lived-Abroad",
-                 "change_link_description": "answer on living abroad in the last 5 years"}
+                 "change_link_description": "answer on living abroad in the last 5 years",
+                 "reverse": "personal-details:Personal-Details-Lived-Abroad"},
+                {"name": "Do you have any children of your own under 16?",
+                 "value": 'Yes' if data['your_children'] else 'No', 'pk': data['personal_detail_id'], "index": 5,
+                 "change_link_description": "answer on having children of your own under 16",
+                 "reverse": "personal-details:Personal-Details-Your-Children"},
+
             ]
+      
