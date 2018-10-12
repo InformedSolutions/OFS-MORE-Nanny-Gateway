@@ -95,29 +95,35 @@ class SearchTests(TestCase):
                                             application_id=application,
                                             postcode=childcare_postcode)
 
-
     # Unit Tests
     ## General Tests
 
     @tag('unit')
     def test_search_returns_rest_framework_response(self):
+        """
+        Test to see if the search returns a Response object.
+        """
         mock_request = MockSearchRequest()
         response = ArcSearchListView().list(mock_request)
         self.assertEqual(type(response), rest_framework.response.Response)
 
-
     @tag('unit')
     def test_response_contains_data_list(self):
+        """
+        Test to see if the response has a data parameter and that the value is of type list.
+        """
         mock_request = MockSearchRequest()
         response = ArcSearchListView().list(mock_request)
         self.assertEqual(type(response.data), list)
-
 
     # Integration Tests
     ## General Tests
 
     @tag('integration')
     def test_search_return_no_results(self):
+        """
+        Test to see if the a search can return no results.
+        """
         self.create_applications()
         mock_request = MockSearchRequest(name='NotInDB')
 
@@ -126,9 +132,11 @@ class SearchTests(TestCase):
         self.assertEqual(type(response.data), list)
         self.assertTrue(len(response.data) == 0)
 
-
     @tag('integration')
     def test_search_return_all_results(self):
+        """
+        Test to see if the search returns all results when given empty string parameters.
+        """
         self.create_applications()
         mock_request = MockSearchRequest()
 
@@ -136,9 +144,13 @@ class SearchTests(TestCase):
 
         self.assertTrue(len(response.data) == 3)
 
+        ## Name Tests
 
     @tag('integration')
     def test_search_single_app_name(self):
+        """
+        Test to search for a name with one result.
+        """
         self.create_applications()
         mock_request = MockSearchRequest(name="Wock")
 
@@ -147,11 +159,11 @@ class SearchTests(TestCase):
         self.assertTrue(len(response.data) == 1)
         self.assertTrue(str(response.data[0]['application_id']) == '26b0a49b-160f-4a8b-b3df-e888092c77e9')
 
-        ## Name Tests
-
-
     @tag('integration')
     def test_search_multiple_app_name(self):
+        """
+        Test to search for a name with two results.
+        """
         self.create_applications()
         mock_request = MockSearchRequest(name="Peter")
 
@@ -163,9 +175,11 @@ class SearchTests(TestCase):
 
         ## Date Of Birth Tests
 
-
     @tag('integration')
     def test_search_single_app_date_of_birth_one_string(self):
+        """
+        Test to search for a date_of_birth with one part of the full date.
+        """
         self.create_applications()
         mock_request = MockSearchRequest(date_of_birth="04")
 
@@ -174,9 +188,11 @@ class SearchTests(TestCase):
         self.assertTrue(len(response.data) == 1)
         self.assertTrue(str(response.data[0]['application_id']) == '1e4f8ae7-bf96-497e-bf02-ebe97afb58c5')
 
-
     @tag('integration')
     def test_search_single_app_date_of_birth_two_strings(self):
+        """
+        Test to search for a date_of_birth with two parts of the full date.
+        """
         self.create_applications()
         mock_request = MockSearchRequest(date_of_birth="06/03")
 
@@ -185,9 +201,11 @@ class SearchTests(TestCase):
         self.assertTrue(len(response.data) == 1)
         self.assertTrue(str(response.data[0]['application_id']) == '24e6a689-5434-40a0-80d2-bab6e121fcaa')
 
-
     @tag('integration')
     def test_search_single_app_date_of_birth_three_strings(self):
+        """
+        Test to search for a date_of_birth with a full date.
+        """
         self.create_applications()
         mock_request = MockSearchRequest(date_of_birth="03/04/2002")
 
@@ -198,9 +216,11 @@ class SearchTests(TestCase):
 
         ## Home Postcode Tests
 
-
     @tag('integration')
     def test_search_single_app_home_postcode(self):
+        """
+        Test to search for a home_postcode.
+        """
         self.create_applications()
         mock_request = MockSearchRequest(home_postcode='CM21 9EP')
 
@@ -211,9 +231,11 @@ class SearchTests(TestCase):
 
         ## Care Location Postcode Tests
 
-
     @tag('integration')
     def test_search_single_app_care_location_postcode(self):
+        """
+        Test to search for a care_location.
+        """
         self.create_applications()
         mock_request = MockSearchRequest(care_location_postcode='SW1X 0EP')
 
@@ -224,9 +246,11 @@ class SearchTests(TestCase):
 
         ## Application Reference Tests
 
-
     @tag('integration')
     def test_search_single_app_reference(self):
+        """
+        Test to search for an application_reference number.
+        """
         self.create_applications()
         mock_request = MockSearchRequest(application_reference='NA0000001')
 
