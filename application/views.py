@@ -1,25 +1,23 @@
-from rest_framework import viewsets, status
-from django_filters import rest_framework as filters
-from rest_framework.exceptions import NotFound
-from rest_framework.response import Response
-from rest_framework.filters import OrderingFilter
-from rest_framework.decorators import api_view
 from django.http import JsonResponse
+from django_filters import rest_framework as filters
+from rest_framework.decorators import api_view
+from rest_framework.exceptions import NotFound
+from rest_framework.filters import OrderingFilter
+from rest_framework.response import Response
 
-from application.models.dbs_check import DbsCheckSerializer, DbsCheck
-from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
-from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer
-from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
+from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
 from application.models.applicant_personal_details import ApplicantPersonalDetails, \
     ApplicantPersonalDetailsSerializer
-
-from application.models.declaration import Declaration, DeclarationSerializer
-from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
-from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
-from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
 from application.models.arc_comments import ArcComments, ArcCommentsSerializer
+from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
+from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
+from application.models.dbs_check import DbsCheckSerializer, DbsCheck
+from application.models.declaration import Declaration, DeclarationSerializer
+from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
+from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
+from application.query_nannies import get_nannies_query
 from .application_reference_generator import create_application_reference
-
+from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer
 
 serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'applicant_personal_details': ApplicantPersonalDetailsSerializer,
@@ -30,6 +28,7 @@ serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'insurance_cover': InsuranceCoverSerializer,
                'application': NannyApplicationSerializer,
                'arc_comments': ArcCommentsSerializer}
+from rest_framework import viewsets, status, mixins
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -116,6 +115,7 @@ class DbsViewSet(BaseViewSet):
         'application_id'
     )
 
+
 class ApplicantPersonalDetailsViewSet(BaseViewSet):
     queryset = ApplicantPersonalDetails.objects.all()
     serializer_class = ApplicantPersonalDetailsSerializer
@@ -126,7 +126,6 @@ class ApplicantPersonalDetailsViewSet(BaseViewSet):
 
 
 class ApplicantHomeAddressViewSet(BaseViewSet):
-
     queryset = ApplicantHomeAddress.objects.all()
     serializer_class = ApplicantHomeAddressSerializer
     filter_fields = (
@@ -137,7 +136,6 @@ class ApplicantHomeAddressViewSet(BaseViewSet):
 
 
 class InsuranceCoverViewSet(BaseViewSet):
-
     queryset = InsuranceCover.objects.all()
     serializer_class = InsuranceCoverSerializer
     filter_fields = (
@@ -145,8 +143,8 @@ class InsuranceCoverViewSet(BaseViewSet):
         'application_id'
     )
 
-class DeclarationViewSet(BaseViewSet):
 
+class DeclarationViewSet(BaseViewSet):
     queryset = Declaration.objects.all()
     serializer_class = DeclarationSerializer
     filter_fields = (
@@ -154,14 +152,15 @@ class DeclarationViewSet(BaseViewSet):
         'application_id'
     )
 
-class PaymentViewSet(BaseViewSet):
 
+class PaymentViewSet(BaseViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     filter_fields = (
         'payment_id',
         'application_id'
     )
+
 
 class ArcCommentsViewSet(BaseViewSet):
     lookup_field = 'review_id'
@@ -173,6 +172,102 @@ class ArcCommentsViewSet(BaseViewSet):
         'field_name',
         'application_id',
     )
+
+
+class ListOnlyViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    A viewset that provides default `list()`.
+    """
+    pass
+
+
+class ArcSearchListView(ListOnlyViewSet):
+    """
+    A viewset containing a list() function.
+    Implemented to allow for search queries on the Nanny DB.
+    """
+    queryset = NannyApplication.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        """
+        Returns a list of dictionaries containing information for populating the Arc search table.
+        The following is a list of optional parameters:
+        name --- Applicant's name, referring to either their first or last name.
+        date_of_birth --- Applicant's date of birth
+        home_postcode --- Applicant's home postcode
+        care_location_postcode --- Any of the applicant's care location's postcode.
+        application_reference --- Application's reference, beginning 'NA'.
+        """
+        query_params = self.__get_query_params(request)
+        nannies_queryset = self.__query_nannies(*query_params)
+
+        response_dict = [
+            {'application_id': query.application_id,
+             'application_reference': query.application_reference,
+             'application_type': 'Nanny',
+             'applicant_name': self.__get_applicant_name(query.application_id),
+             'date_submitted': self.__format_date(query.date_submitted),
+             'date_accessed': self.__format_date(query.date_updated),
+             'submission_type': query.application_status}
+            for query in nannies_queryset]
+
+        return Response(response_dict)
+
+    @staticmethod
+    def __get_applicant_name(app_id):
+        """
+        Returns an applicant's first_name, last_name
+        :param app_id: Applicant's id
+        :return: String
+        """
+        if ApplicantPersonalDetails.objects.filter(application_id=app_id).exists():
+            applicant_person_details_record = ApplicantPersonalDetails.objects.get(application_id=app_id)
+
+            first_name = applicant_person_details_record.first_name
+            last_name = applicant_person_details_record.last_name
+
+            return "{0} {1}".format(first_name, last_name)
+
+        else:
+            return ""
+
+    @staticmethod
+    def __format_date(datetime) -> str:
+        """
+        Converts datetime to string in displayable format DD/MM/YYYY
+        :param datetime: datetime object or None
+        :return: String
+        """
+        if datetime:
+            return datetime.strftime('%d/%m/%Y')
+        else:
+            return ""
+
+
+    @staticmethod
+    def __get_query_params(request):
+        """
+        Extracts specific information from the request query_params.
+        :param request: request object, containing query_params.
+        :return: Tuple of sent data.
+        """
+        name = request.query_params.get('name')
+        date_of_birth = request.query_params.get('date_of_birth')
+        home_postcode = request.query_params.get('home_postcode')
+        care_location_postcode = request.query_params.get('care_location_postcode')
+        application_reference = request.query_params.get('application_reference')
+
+        return name, date_of_birth, home_postcode, care_location_postcode, application_reference
+
+    @staticmethod
+    def __query_nannies(name, date_of_birth, home_postcode, care_location_postcode, application_reference):
+        """
+        Calls get_nannies_query, an external function that constructs a Q object.
+        :return: A filtered NannyApplication queryset
+        """
+        query = get_nannies_query(name, date_of_birth, home_postcode, care_location_postcode, application_reference)
+
+        return NannyApplication.objects.filter(query)
 
 
 @api_view(['GET'])

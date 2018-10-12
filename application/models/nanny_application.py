@@ -91,7 +91,8 @@ class NannyApplicationSerializer(serializers.ModelSerializer):
     def get_summary_table(self):
         address_tbp = self.get_bool_as_string(self.data['address_to_be_provided'])
         return [
-                {"name": "Do you know where you will be working?", "value": address_tbp,
+                {"name": "Do you know where you'll be working?", "value": address_tbp,
                  'pk': self.data['application_id'], "index": 1,
-                 "reverse": "Childcare-Address-Where-You-Work"}
+                 "reverse": "Childcare-Address-Where-You-Work",
+                 "change_link_description": "answer on where you'll be working"}
             ]
