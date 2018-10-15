@@ -45,6 +45,8 @@ class NannyApplication(models.Model):
     login_details_arc_flagged = models.BooleanField(default=False)
     personal_details_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
     personal_details_arc_flagged = models.BooleanField(default=False)
+    your_children_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
+    your_children_arc_flagged = models.BooleanField(default=False)
     childcare_address_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
     childcare_address_arc_flagged = models.BooleanField(default=False)
     first_aid_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
