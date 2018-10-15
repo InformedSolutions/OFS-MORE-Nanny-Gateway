@@ -43,17 +43,80 @@ class NannyAuditLogsTests(TestCase):
         self.assertEqual(timeline_qset[1].extra_data['action'], 'resubmitted by')
         self.assertEqual(len(timeline_qset), 2)
 
-    def test_returning_application_creates_timeline_log(self):
-        self.skipTest('NotImplemented')
-
-    def test_accepting_application_creates_timeline_log(self):
-        self.skipTest('NotImplemented')
-
-    def test_post_request_to_arc_comments_endpoint_creates_timeline_log(self):
-        self.skipTest('NotImplemented')
-
     def test_all_models_are_tracked_by_timeline_log(self):
-        self.skipTest('NotImplemented')
+        dir(models)
+        models_to_exclude = ['NannyApplication', 'ChildcareAddress']
+
+        for model in list(models):
+            if model not in models_to_exclude:
+                self.assertTrue(hasattr(model, 'timelog_fields'))
+            else:
+                self.assertFalse(hasattr(model, 'timelog_fields'))
+
+    def test_applicant_home_address_timelog_fields(self):
+        self.assertEqual(
+            models.ApplicantHomeAddress.timelog_fields,
+            (
+                'street_line1',
+                'street_line2',
+                'town',
+                'county',
+                'country',
+                'postcode',
+                'current_address',
+                'move_in_month',
+                'move_in_year'
+            )
+        )
+
+    def test_applicant_personal_details_timelog_fields(self):
+        self.assertEqual(
+            models.ApplicantPersonalDetails.timelog_fields,
+            (
+                'date_of_birth',
+                'first_name',
+                'middle_names',
+                'last_name',
+                'lived_abroad'
+            )
+        )
+
+    def test_childcare_training_timelog_fields(self):
+        self.assertEqual(
+            models.ChildcareTraining.timelog_fields,
+            (
+                'level_2_training',
+                'common_core_training',
+                'no_training'
+            )
+        )
+
+    def test_dbs_check_timelog_fields(self):
+        self.assertEqual(
+            models.DbsCheck.timelog_fields,
+            (
+                'dbs_number',
+                'convictions'
+            )
+        )
+
+    def test_first_aid_training_timelog_fields(self):
+        self.assertEqual(
+            models.FirstAidTraining.timelog_fields,
+            (
+                'training_organisation',
+                'course_title',
+                'course_date'
+            )
+        )
+
+    def test_insurance_cover_timelog_fields(self):
+        self.assertEqual(
+            models.InsuranceCover.timelog_fields,
+            (
+                'public_liability',
+            )
+        )
 
     def test_user_updating_a_flagged_field_creates_timeline_log(self):
         self.skipTest('NotImplemented')
@@ -91,3 +154,6 @@ class NannyAuditLogsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['object_id'], str(instance_1.pk))
+
+    def test_list_request_to_timeline_log_endpoint_returns_timeline_logs_in_date_order(self):
+        self.skipTest('NotImplemented')
