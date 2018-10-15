@@ -3,8 +3,6 @@ import traceback
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from timeline_logger.models import TimelineLog
-
 from application import models
 
 
@@ -51,7 +49,7 @@ def timeline_log_pre_save(sender, instance, raw, using, update_fields, **kwargs)
 
 
 def __handle_created_application(instance):
-    TimelineLog.objects.create(
+    models.timeline_log.TimelineLog.objects.create(
         content_object=instance,
         user=None,
         template='timeline_logger/application_action.txt',
@@ -60,7 +58,7 @@ def __handle_created_application(instance):
 
 
 def __handle_submitted_application(instance):
-    TimelineLog.objects.create(
+    models.timeline_log.TimelineLog.objects.create(
         content_object=instance,
         user=None,
         template='timeline_logger/application_action.txt',
@@ -69,7 +67,7 @@ def __handle_submitted_application(instance):
 
 
 def __handle_resubmitted_application(instance):
-    TimelineLog.objects.create(
+    models.timeline_log.TimelineLog.objects.create(
         content_object=instance,
         user=None,
         template='timeline_logger/application_action.txt',
@@ -78,7 +76,7 @@ def __handle_resubmitted_application(instance):
 
 
 def __handle_updated_field(instance, current_application_status, field):
-    TimelineLog.objects.create(
+    models.timeline_log.TimelineLog.objects.create(
         content_object=instance.application_id,
         user=None,
         template='timeline_logger/application_field.txt',

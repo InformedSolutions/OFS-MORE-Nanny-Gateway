@@ -6,8 +6,6 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 
-from timeline_logger.models import TimelineLog
-
 from application.models.dbs_check import DbsCheckSerializer, DbsCheck
 from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
 from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer
@@ -21,6 +19,7 @@ from application.models.applicant_home_address import ApplicantHomeAddress, Appl
 from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
 from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
 from application.models.arc_comments import ArcComments, ArcCommentsSerializer
+from application.models.timeline_log import TimelineLog
 from .application_reference_generator import create_application_reference
 
 
