@@ -16,11 +16,19 @@ class ApplicationConfig(AppConfig):
         # Any interaction with django will fail before this class
         from application.signals import timeline_log_pre_save
 
-        model_to_register = self.get_model('NannyApplication')
+        models_to_register = (
+            'ApplicantHomeAddress',
+            'ApplicantPersonalDetails',
+            'ChildcareTraining',
+            'DbsCheck',
+            'FirstAidTraining',
+            'InsuranceCover',
+            'NannyApplication'
+        )
 
-        # XXX: Ensure dispatch_uid declared to prevent duplicate logs being created.
-        pre_save.connect(timeline_log_pre_save, sender=model_to_register, dispatch_uid="timeline_log_pre_save")
-
+        for model_to_register in models_to_register:
+            # XXX: Ensure dispatch_uid declared to prevent duplicate logs being created.
+            pre_save.connect(timeline_log_pre_save, sender=self.get_model(model_to_register), dispatch_uid="timeline_log_pre_save")
 
     def ready(self):
         self.register_timeline_log_signals()
