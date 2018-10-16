@@ -38,6 +38,8 @@ router.register(r'api/v1/declaration', views.DeclarationViewSet)
 router.register(r'api/v1/payment', views.PaymentViewSet)
 router.register(r'api/v1/arc-comments', views.ArcCommentsViewSet)
 router.register(r'api/v1/timeline-log', views.TimeLineLogViewSet)
+router.register(r'api/v1/arc-search', views.ArcSearchListView)
+
 
 
 urlpatterns = [
