@@ -8,7 +8,7 @@ from .applicant_personal_details import ApplicantPersonalDetails
 
 class ApplicantHomeAddress(models.Model):
     """
-        Model for Nanny Application table
+    Model for APPLICANT_HOME_ADDRESS table.
     """
     # Managers
     objects = models.Manager()
@@ -27,6 +27,24 @@ class ApplicantHomeAddress(models.Model):
     childcare_address = models.NullBooleanField(blank=True, null=True, default=None)
     move_in_month = models.IntegerField(blank=True, null=True)
     move_in_year = models.IntegerField(blank=True, null=True)
+
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'street_line1',
+            'street_line2',
+            'town',
+            'county',
+            'country',
+            'postcode',
+            'current_address',
+            'move_in_month',
+            'move_in_year'
+        )
 
     @classmethod
     def get_id(cls, home_address_id):

@@ -20,6 +20,18 @@ class FirstAidTraining(models.Model):
     show_certificate = models.NullBooleanField(blank=True, null=True, default=None)
     renew_certificate = models.NullBooleanField(blank=True, null=True, default=None)
 
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'training_organisation',
+            'course_title',
+            'course_date'
+        )
+
     class Meta:
         db_table = 'FIRST_AID_TRAINING'
 

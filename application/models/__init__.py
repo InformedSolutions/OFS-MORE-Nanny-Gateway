@@ -9,3 +9,4 @@ from application.models.insurance_cover import *
 from application.models.dbs_check import *
 from application.models.application_reference import *
 from application.models.payment import *
+from application.models.timeline_log import *

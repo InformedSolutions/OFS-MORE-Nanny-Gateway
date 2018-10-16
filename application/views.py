@@ -1,23 +1,29 @@
-from django.http import JsonResponse
-from django_filters import rest_framework as filters
-from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound
-from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
+from rest_framework.filters import OrderingFilter
+from rest_framework.decorators import api_view
+from rest_framework import viewsets, status, mixins
 
-from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
+from django_filters import rest_framework as filters
+from django.http import JsonResponse
+
+from application.models.dbs_check import DbsCheckSerializer, DbsCheck
+from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
+from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer
+from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
 from application.models.applicant_personal_details import ApplicantPersonalDetails, \
     ApplicantPersonalDetailsSerializer
-from application.models.arc_comments import ArcComments, ArcCommentsSerializer
-from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
-from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
-from application.models.dbs_check import DbsCheckSerializer, DbsCheck
+from application.models.timeline_log import TimelineLogSerializer
+
 from application.models.declaration import Declaration, DeclarationSerializer
+from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
+from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
 from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
-from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
+from application.models.arc_comments import ArcComments, ArcCommentsSerializer
+from application.models.timeline_log import TimelineLog
 from application.query_nannies import get_nannies_query
 from .application_reference_generator import create_application_reference
-from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer
+
 
 serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'applicant_personal_details': ApplicantPersonalDetailsSerializer,
@@ -28,7 +34,6 @@ serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'insurance_cover': InsuranceCoverSerializer,
                'application': NannyApplicationSerializer,
                'arc_comments': ArcCommentsSerializer}
-from rest_framework import viewsets, status, mixins
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -174,14 +179,7 @@ class ArcCommentsViewSet(BaseViewSet):
     )
 
 
-class ListOnlyViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    """
-    A viewset that provides default `list()`.
-    """
-    pass
-
-
-class ArcSearchListView(ListOnlyViewSet):
+class ArcSearchListView(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     A viewset containing a list() function.
     Implemented to allow for search queries on the Nanny DB.
@@ -268,6 +266,14 @@ class ArcSearchListView(ListOnlyViewSet):
         query = get_nannies_query(name, date_of_birth, home_postcode, care_location_postcode, application_reference)
 
         return NannyApplication.objects.filter(query)
+
+
+class TimeLineLogViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin):
+    queryset = TimelineLog.objects.all().order_by('-timestamp')
+    serializer_class = TimelineLogSerializer
+    filter_fields = (
+        'object_id',
+    )
 
 
 @api_view(['GET'])
