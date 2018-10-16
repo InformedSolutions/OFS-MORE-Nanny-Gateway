@@ -34,7 +34,8 @@ class ApplicantPersonalDetails(models.Model):
             'first_name',
             'middle_names',
             'last_name',
-            'lived_abroad'
+            'lived_abroad',
+            'your_children'
         )
 
     @classmethod
