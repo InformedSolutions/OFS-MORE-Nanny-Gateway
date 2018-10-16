@@ -11,7 +11,13 @@ def timeline_log_pre_save(sender, instance, raw, using, update_fields, **kwargs)
     Receiver function for the timeline logger when post_save() is called on a model which is tracked.
     """
     try:
-        current_application_status = models.NannyApplication.objects.get(pk=instance.application_id).application_status
+        if hasattr(instance, 'application_status'):
+            # Need to grab existing NannyApplication's application_status.
+            current_application_status = models.NannyApplication.objects.get(pk=instance.application_id).application_status
+        else:
+            # instance.application_id returns a NannyApplication instance for all other models.
+            current_application_status = instance.application_id.application_status
+
     except AttributeError:
         traceback.print_exc(file=sys.stdout)
         sys.exit('''
@@ -77,8 +83,8 @@ def __handle_resubmitted_application(instance):
 
 def __handle_updated_field(instance, current_application_status, field):
     models.timeline_log.TimelineLog.objects.create(
-        content_object=instance.application_id,
         user=None,
+        object_id=instance.application_id.pk,
         template='timeline_logger/application_field.txt',
         extra_data={
             'user_type': 'applicant',
