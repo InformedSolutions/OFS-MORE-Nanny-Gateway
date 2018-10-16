@@ -42,8 +42,11 @@ def timeline_log_pre_save(sender, instance, raw, using, update_fields, **kwargs)
             return __handle_resubmitted_application(instance)
 
     else:
-        # Grab instance's existing data from the database.
-        old_instance = instance._meta.default_manager.get(pk=instance.pk)
+        try:
+            # Grab instance's existing data from the database.
+            old_instance = instance._meta.default_manager.get(pk=instance.pk)
+        except ObjectDoesNotExist:
+            return
 
         # Check which fields the applicant has updated in a returned application.
         if current_application_status == 'FURTHER_INFORMATION':
