@@ -178,7 +178,7 @@ class ArcCommentsViewSet(BaseViewSet):
 
 
 class TimeLineLogViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin):
-    queryset = TimelineLog.objects.all()
+    queryset = TimelineLog.objects.all().order_by('-timestamp')
     serializer_class = TimelineLogSerializer
     filter_fields = (
         'object_id',
