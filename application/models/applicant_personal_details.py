@@ -107,7 +107,7 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
                 {"name": "Have you lived abroad in the last 5 years?",
                  "value": 'Yes' if data['lived_abroad'] else 'No', 'pk': data['personal_detail_id'], "index": 4,
                  "reverse": "personal-details:Personal-Details-Lived-Abroad"},
-                {"name": "Do you have any children of your own under 16?",
+                {"name": "Do you have children of your own under 16?",
                  "value": 'Yes' if data['your_children'] else 'No', 'pk': data['personal_detail_id'], "index": 5,
                  "reverse": "personal-details:Personal-Details-Your-Children"},
             ]
