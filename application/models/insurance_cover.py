@@ -16,6 +16,16 @@ class InsuranceCover(models.Model):
         NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     public_liability = models.NullBooleanField(blank=True, null=True, default=None)
 
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'public_liability',
+        )
+
     class Meta:
         db_table = 'INSURANCE_COVER'
 
@@ -35,10 +45,11 @@ class InsuranceCoverSerializer(serializers.ModelSerializer):
         data = self.data
         return [
                 {"title": "Insurance cover", "id": data['insurance_cover_id']},
-                {"name": "Do you have a public liability insurance?",
+                {"name": "Do you have public liability insurance?",
                  "value": self.get_bool_as_string(data['public_liability']),
                  'pk': data['insurance_cover_id'],
-                    "reverse": "insurance:Public-Liability"}
+                 "reverse": "insurance:Public-Liability",
+                 "change_link_description": "answer on having public liability insurance"}
             ]
 
 

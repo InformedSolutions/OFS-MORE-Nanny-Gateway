@@ -17,6 +17,17 @@ class DbsCheck(models.Model):
     dbs_number = models.CharField(max_length=100)
     convictions = models.NullBooleanField(blank=True, null=True, default=None)
 
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'dbs_number',
+            'convictions'
+        )
+
     class Meta:
         db_table = 'DBS_CHECK'
 
@@ -37,8 +48,10 @@ class DbsCheckSerializer(serializers.ModelSerializer):
         return [
             {"title": "Criminal record (DBS) check", "id": fields['dbs_id']},
             {"name": "DBS certificate number", "value": fields['dbs_number'],
-             "reverse": "dbs:Details"},
-            {"name": "Do you have any cautions or convictions?",
+             "reverse": "dbs:Details",
+             "change_link_description": "DBS certificate number"},
+            {"name": "Do you have any criminal cautions or convictions?",
              "value": self.get_bool_as_string(fields['convictions']),
-             "reverse": "dbs:Details"}
+             "reverse": "dbs:Details",
+             "change_link_description": "answer on criminal cautions or convictions"}
         ]

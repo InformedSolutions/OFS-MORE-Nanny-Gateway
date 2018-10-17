@@ -8,7 +8,7 @@ from .applicant_personal_details import ApplicantPersonalDetails
 
 class ApplicantHomeAddress(models.Model):
     """
-        Model for Nanny Application table
+    Model for APPLICANT_HOME_ADDRESS table.
     """
     # Managers
     objects = models.Manager()
@@ -27,6 +27,24 @@ class ApplicantHomeAddress(models.Model):
     childcare_address = models.NullBooleanField(blank=True, null=True, default=None)
     move_in_month = models.IntegerField(blank=True, null=True)
     move_in_year = models.IntegerField(blank=True, null=True)
+
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'street_line1',
+            'street_line2',
+            'town',
+            'county',
+            'country',
+            'postcode',
+            'current_address',
+            'move_in_month',
+            'move_in_year'
+        )
 
     @classmethod
     def get_id(cls, home_address_id):
@@ -58,11 +76,13 @@ class ApplicantHomeAddressSerializer(serializers.ModelSerializer):
         return [
                 {"name": "Your home address", "value": home_address, 'pk': data['home_address_id'], "index": 3,
                  "section": "applicant_personal_details_section",
-                 "reverse": "personal-details:Personal-Details-Manual-Address"},
+                 "reverse": "personal-details:Personal-Details-Manual-Address",
+                 "change_link_description": "your home address"},
                 {"name": "Will you work and live at the same address?",
                  "value": self.get_bool_as_string(data['childcare_address']),
                  "section": "childcare_address_section",
                  'pk': data['home_address_id'], "index": 1,
-                 "reverse": "Childcare-Address-Location"}
+                 "reverse": "Childcare-Address-Location",
+                 "change_link_description": "answer on working and living at the same address"}
             ]
 

@@ -45,6 +45,8 @@ class NannyApplication(models.Model):
     login_details_arc_flagged = models.BooleanField(default=False)
     personal_details_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
     personal_details_arc_flagged = models.BooleanField(default=False)
+    your_children_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
+    your_children_arc_flagged = models.BooleanField(default=False)
     childcare_address_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
     childcare_address_arc_flagged = models.BooleanField(default=False)
     first_aid_status = models.CharField(choices=TASK_STATUS, max_length=50, default="NOT_STARTED")
@@ -91,7 +93,8 @@ class NannyApplicationSerializer(serializers.ModelSerializer):
     def get_summary_table(self):
         address_tbp = self.get_bool_as_string(self.data['address_to_be_provided'])
         return [
-                {"name": "Do you know where you will be working?", "value": address_tbp,
+                {"name": "Do you know where you'll be working?", "value": address_tbp,
                  'pk': self.data['application_id'], "index": 1,
-                 "reverse": "Childcare-Address-Where-You-Work"}
+                 "reverse": "Childcare-Address-Where-You-Work",
+                 "change_link_description": "answer on where you'll be working"}
             ]

@@ -8,7 +8,7 @@ from .nanny_application import NannyApplication
 
 class ChildcareTraining(models.Model):
     """
-    Model for Childcare Training table.
+    Model for CHILDCARE_TRAINING table.
     """
     objects = models.Manager()
 
@@ -17,6 +17,18 @@ class ChildcareTraining(models.Model):
     level_2_training = models.NullBooleanField(blank=True, null=True, default=None)
     common_core_training = models.NullBooleanField(blank=True, null=True, default=None)
     no_training = models.NullBooleanField(blank=True, null=True, default=None)
+
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'level_2_training',
+            'common_core_training',
+            'no_training'
+        )
 
     @classmethod
     def get_id(cls, app_id):
@@ -40,14 +52,23 @@ class ChildcareTrainingSerializer(serializers.ModelSerializer):
 
     def get_summary_table(self):
         data = self.data
+        level_2_training = data['level_2_training']
+        common_core_training = data['common_core_training']
+        no_training = data['no_training']
+        if not no_training:
+            if level_2_training and common_core_training:
+                childcare_training = 'Childcare qualification (level 2 or higher), Training in common core skills'
+            elif level_2_training and not common_core_training:
+                childcare_training = 'Childcare qualification (level 2 or higher)'
+            elif not level_2_training and common_core_training:
+                childcare_training = 'Training in common core skills'
+        else:
+            childcare_training = 'None'
         return [
                 {"title": "Childcare training", "id": data['childcare_training_id']},
-                {"name": "Do you have a childcare qualification?",
-                 "value": self.get_bool_as_string(data['level_2_training']),
+                {"name": "What type of childcare course have you completed?",
+                 "value": childcare_training,
                  'pk': data['childcare_training_id'],
-                 "reverse": "Type-Of-Childcare-Training"},
-                {"name": "Have you had common core training?",
-                 "value": self.get_bool_as_string(data['common_core_training']),
-                 'pk': data['childcare_training_id'],
-                 "reverse": "Type-Of-Childcare-Training"}
+                 "reverse": "Type-Of-Childcare-Training",
+                 "change_link_description": "course type"}
             ]
