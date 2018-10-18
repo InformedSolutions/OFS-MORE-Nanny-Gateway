@@ -9,7 +9,8 @@ from django.http import JsonResponse
 
 from application.models.dbs_check import DbsCheckSerializer, DbsCheck
 from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
-from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer
+from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer, ApplicantChildrenDetails, \
+    ApplicantChildrenDetailsSerializer
 from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
 from application.models.applicant_personal_details import ApplicantPersonalDetails, \
     ApplicantPersonalDetailsSerializer
@@ -33,7 +34,9 @@ serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'first_aid': FirstAidTrainingSerializer,
                'insurance_cover': InsuranceCoverSerializer,
                'application': NannyApplicationSerializer,
-               'arc_comments': ArcCommentsSerializer}
+               'arc_comments': ArcCommentsSerializer,
+               'your_children': ApplicantChildrenDetailsSerializer,
+               }
 
 
 class BaseViewSet(viewsets.ModelViewSet):
@@ -175,6 +178,16 @@ class ArcCommentsViewSet(BaseViewSet):
         'review_id',
         'table_pk',
         'field_name',
+        'application_id',
+    )
+
+
+class YourChildrenViewSet(BaseViewSet):
+    lookup_field = 'child_id'
+    queryset = ApplicantChildrenDetails.objects.all()
+    serializer_class = ApplicantChildrenDetailsSerializer
+    filter_fields = (
+        'child_id',
         'application_id',
     )
 
