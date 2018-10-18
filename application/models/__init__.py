@@ -10,3 +10,5 @@ from application.models.dbs_check import *
 from application.models.application_reference import *
 from application.models.payment import *
 from application.models.timeline_log import *
+from application.models.applicant_children_details import *
+
