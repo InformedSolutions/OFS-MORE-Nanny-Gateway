@@ -117,9 +117,27 @@ class ApplicantChildrenDetailsSerializer(serializers.ModelSerializer):
 
         return birth_date
 
-    def get_summary_table(self, i):     #TODO: Fix this so it can return multiple values for any number of children
+    def get_summary_table(self, i):
+        data = self.data
         child_address = self.get_address()
-        row_name = self.get_name()
-        return {"name": row_name, "value": child_address, 'pk': self.data['child_id'],
-                "reverse": "Childcare-Address-Manual-Entry", 'index': i + 1,
-                "change_link_description": "childcare address " + str(i)}
+        birth_date = self.get_birth_date
+
+        return [
+            {"title": self.get_name(), "id": data['child_id'], "index": 0},
+
+            {"name": "Name",
+             "value": self.get_name(),
+             'pk': data['child_id'], "index": 1,
+             "reverse": "your-children:Your-Children-Details",
+             "change_link_description": "child's name"},
+
+            {"name": "Date of birth",
+             "value": birth_date, 'pk': data['child_id'], "index": 2,
+             "reverse": "your-children:Your-Children-Details",
+             "change_link_description": "child's date of birth"},
+
+            {"name": "Address",
+             "value": child_address, 'pk': data['child_id'], "index": 3,
+             "reverse": "Your-Children-Manual-address",
+             "change_link_description": "child's address"},
+        ]
