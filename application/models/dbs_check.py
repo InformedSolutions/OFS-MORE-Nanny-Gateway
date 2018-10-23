@@ -12,10 +12,12 @@ class DbsCheck(models.Model):
     objects = models.Manager()
 
     dbs_id = models.UUIDField(primary_key=True, default=uuid4)
-    application_id = models.ForeignKey(
-        NannyApplication, on_delete=models.CASCADE, db_column='application_id')
-    dbs_number = models.CharField(max_length=100)
-    convictions = models.NullBooleanField(blank=True, null=True, default=None)
+    application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
+    dbs_number = models.CharField(max_length=100, null=True)
+    has_convictions = models.NullBooleanField(blank=True, null=True, default=None)
+    lived_abroad = models.BooleanField(default=None)
+    is_ofsted_dbs = models.NullBooleanField(blank=True, null=True, default=None)
+    on_dbs_update_service = models.NullBooleanField(blank=True, null=True, default=None)
 
     @property
     def timelog_fields(self):
@@ -24,8 +26,10 @@ class DbsCheck(models.Model):
         :return: tuple of fields which needs update tracking when application is returned
         """
         return (
+            'lived_abroad',
             'dbs_number',
-            'convictions'
+            'has_convictions',
+            'on_dbs_update_service'
         )
 
     class Meta:
