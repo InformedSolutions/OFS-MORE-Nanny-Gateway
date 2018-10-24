@@ -16,6 +16,7 @@ class ApplicantChildrenDetails(models.Model):
     child_id = models.UUIDField(primary_key=True, default=uuid4)
     application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     child = models.IntegerField(null=True, blank=True)
+    lives_with_applicant = models.NullBooleanField(null=True)
     first_name = models.CharField(max_length=100, blank=True)
     middle_names = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100, blank=True)
