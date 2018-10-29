@@ -28,7 +28,7 @@ class DbsCheck(models.Model):
         return (
             'lived_abroad',
             'dbs_number',
-            'has_convictions',
+            'convictions',
             'on_dbs_update_service'
         )
 
