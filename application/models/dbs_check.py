@@ -74,9 +74,9 @@ class DbsCheckSerializer(serializers.ModelSerializer):
             "change_link_description": "DBS certificate number",
         }
 
-        has_convictions_data = {
+        convictions_data = {
             "name": "Do you have any criminal cautions or convictions?",
-            "value": self.get_bool_as_string(fields['has_convictions']),
+            "value": self.get_bool_as_string(fields['convictions']),
             "reverse": "dbs:Capita-DBS-Details-View",
             "change_link_description": "answer on criminal cautions or convictions"
         }
@@ -90,7 +90,7 @@ class DbsCheckSerializer(serializers.ModelSerializer):
 
         if fields['is_ofsted_dbs']:
             return_json.append(dbs_number_data)
-            return_json.append(has_convictions_data)
+            return_json.append(convictions_data)
         elif not fields['is_ofsted_dbs']:
             return_json.append(on_dbs_update_service_data)
             return_json.append(dbs_number_data)
