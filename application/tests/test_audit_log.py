@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings
 from django.test import TestCase
 
@@ -43,85 +44,91 @@ class NannyAuditLogsTests(TestCase):
         self.assertEqual(len(timeline_qset), 2)
 
     def test_all_models_are_tracked_by_timeline_log(self):
-        # models_to_exclude = ['NannyApplication', 'ChildcareAddress']
-        #
-        # for model in list(models):
-        #     if model not in models_to_exclude:
-        #         self.assertTrue(hasattr(model, 'timelog_fields'))
-        #     else:
-        #         self.assertFalse(hasattr(model, 'timelog_fields'))
-        self.skipTest('NotImplemented')
+        models_to_exclude = [
+            models.NannyApplication,
+            models.ChildcareAddress,
+            models.TimelineLog,
+            models.Declaration,
+            models.ApplicationReference,
+            models.Payment,
+            models.ArcComments
+        ]
+
+        application_models = apps.get_app_config('application').get_models()
+
+        for model in list(application_models):
+            if model not in models_to_exclude:
+                self.assertTrue(hasattr(model(), 'timelog_fields'))
+            else:
+                self.assertFalse(hasattr(model(), 'timelog_fields'))
 
     def test_applicant_home_address_timelog_fields(self):
-        # self.assertEqual(
-        #     models.ApplicantHomeAddress.timelog_fields,
-        #     (
-        #         'street_line1',
-        #         'street_line2',
-        #         'town',
-        #         'county',
-        #         'country',
-        #         'postcode',
-        #         'current_address',
-        #         'move_in_month',
-        #         'move_in_year'
-        #     )
-        # )
-        self.skipTest('NotImplemented')
+        exp_fields = (
+                'street_line1',
+                'street_line2',
+                'town',
+                'county',
+                'country',
+                'postcode',
+                'current_address',
+                'move_in_month',
+                'move_in_year'
+            )
+
+        self.assertEqual(models.ApplicantHomeAddress().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(models.ApplicantHomeAddress(), field) for field in exp_fields]))
 
     def test_applicant_personal_details_timelog_fields(self):
-        # self.assertEqual(
-        #     models.ApplicantPersonalDetails.timelog_fields,
-        #     (
-        #         'date_of_birth',
-        #         'first_name',
-        #         'middle_names',
-        #         'last_name',
-        #         'lived_abroad'
-        #     )
-        # )
-        self.skipTest('NotImplemented')
+        exp_fields = (
+            'date_of_birth',
+            'first_name',
+            'middle_names',
+            'last_name',
+            'lived_abroad',
+            'your_children'
+        )
+
+        self.assertEqual(models.ApplicantPersonalDetails().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(models.ApplicantPersonalDetails(), field) for field in exp_fields]))
 
     def test_childcare_training_timelog_fields(self):
-        # self.assertEqual(
-        #     models.ChildcareTraining.timelog_fields,
-        #     (
-        #         'level_2_training',
-        #         'common_core_training',
-        #         'no_training'
-        #     )
-        # )
-        self.skipTest('NotImplemented')
+        exp_fields = (
+            'level_2_training',
+            'common_core_training',
+            'no_training'
+        )
+
+        self.assertEqual(models.ChildcareTraining().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(models.ChildcareTraining(), field) for field in exp_fields]))
 
     def test_dbs_check_timelog_fields(self):
-        # self.assertEqual(
-        #     models.DbsCheck.timelog_fields,
-        #     (
-        #         'dbs_number',
-        #         'convictions'
-        #     )
-        # )
-        self.skipTest('NotImplemented')
+        exp_fields = (
+            'lived_abroad',
+            'dbs_number',
+            'convictions',
+            'on_dbs_update_service'
+        )
+
+        self.assertEqual(models.DbsCheck().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(models.DbsCheck(), field) for field in exp_fields]))
 
     def test_first_aid_training_timelog_fields(self):
-        # self.assertEqual(
-        #     models.FirstAidTraining.timelog_fields,
-        #     (
-        #         'training_organisation',
-        #         'course_title',
-        #         'course_date'
-        #     )
-        # )
-        self.skipTest('NotImplemented')
+        exp_fields = (
+            'training_organisation',
+            'course_title',
+            'course_date'
+        )
+
+        self.assertEqual(models.FirstAidTraining().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(models.FirstAidTraining(), field) for field in exp_fields]))
 
     def test_insurance_cover_timelog_fields(self):
-        # self.assertEqual(
-        #     models.InsuranceCover.timelog_fields,
-        #     (
-        #         'public_liability',
-        #     )
-        # )
-        self.skipTest('NotImplemented')
+        exp_fields = (
+            'public_liability',
+        )
+
+        self.assertEqual(models.InsuranceCover().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(models.InsuranceCover(), field) for field in exp_fields]))
 
     def test_user_updating_a_flagged_field_creates_timeline_log(self):
         self.skipTest('NotImplemented')
