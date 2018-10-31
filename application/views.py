@@ -83,7 +83,13 @@ class ChildcareAddressViewSet(BaseViewSet):
     serializer_class = ChildcareAddressSerializer
     filter_fields = (
         'childcare_address_id',
-        'application_id'
+        'application_id',
+        'street_line1',
+        'street_line2',
+        'town',
+        'county',
+        'country',
+        'postcode'
     )
     ordering_fields = (
         'date_created'
