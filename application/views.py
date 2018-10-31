@@ -9,6 +9,7 @@ from django.http import JsonResponse
 
 from application.models.dbs_check import DbsCheckSerializer, DbsCheck
 from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
+from application.your_children_serializer import ApplicantAllChildrenDetailsSerializer
 from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer, ApplicantChildrenDetails, \
     ApplicantChildrenDetailsSerializer
 from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
@@ -35,7 +36,7 @@ serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'insurance_cover': InsuranceCoverSerializer,
                'application': NannyApplicationSerializer,
                'arc_comments': ArcCommentsSerializer,
-               'your_children': ApplicantChildrenDetailsSerializer,
+               'your_children': ApplicantAllChildrenDetailsSerializer,
                }
 
 
@@ -296,6 +297,10 @@ def summary_table(request, name, application_id):
             serializer = serializers[name]
             model = serializer.Meta.model
             records = model.objects.filter(application_id=application_id)
+
+            if name == 'your_children':
+                return JsonResponse(serializer(records).get_summary_table(), safe=False)
+
             if name != "childcare_address":
                 if records:
                     return JsonResponse(serializer(records[0]).get_summary_table(), safe=False)

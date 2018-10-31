@@ -1,3 +1,4 @@
+import datetime
 from uuid import uuid4
 
 import inflect
@@ -84,45 +85,20 @@ class ApplicantChildrenDetailsSerializer(serializers.ModelSerializer):
         return str(data['street_line1']) + ', ' + str(data['street_line2']) + ', ' \
                + str(data['town']) + ', ' + str(data['postcode'])
 
-    @property
     def get_birth_date(self):
         data = self.data
-        date_of_birth_list = str(data['date_of_birth']).split('-')
-        birth_day = date_of_birth_list[2]
-        birth_month = date_of_birth_list[1]
-        if birth_month == '01':
-            birth_month_string = 'Jan'
-        elif birth_month == '02':
-            birth_month_string = 'Feb'
-        elif birth_month == '03':
-            birth_month_string = 'Mar'
-        elif birth_month == '04':
-            birth_month_string = 'Apr'
-        elif birth_month == '05':
-            birth_month_string = 'May'
-        elif birth_month == '06':
-            birth_month_string = 'Jun'
-        elif birth_month == '07':
-            birth_month_string = 'Jul'
-        elif birth_month == '08':
-            birth_month_string = 'Aug'
-        elif birth_month == '09':
-            birth_month_string = 'Sep'
-        elif birth_month == '10':
-            birth_month_string = 'Oct'
-        elif birth_month == '11':
-            birth_month_string = 'Nov'
-        elif birth_month == '12':
-            birth_month_string = 'Dec'
-        birth_year = date_of_birth_list[0]
-        birth_date = birth_day + ' ' + birth_month_string + ' ' + birth_year
+        birth_day = data['birth_day']
+        birth_month = data['birth_month']
+        birth_year = data['birth_year']
 
-        return birth_date
+        birth_datetime = datetime.datetime(birth_year, birth_month, birth_day)
+        return birth_datetime.strftime('%d %b %Y')
 
     def get_summary_table(self):
         data = self.data
         child_address = self.get_address()
-        birth_date = self.get_birth_date
+        birth_date = self.get_birth_date()
+        live_with_applicant_name = self.get_lives_with_applicant()
 
         return [
             {"title": self.get_name(), "id": data['child_id'], "index": 0},
@@ -140,6 +116,6 @@ class ApplicantChildrenDetailsSerializer(serializers.ModelSerializer):
 
             {"name": "Address",
              "value": child_address, 'pk': data['child_id'], "index": 3,
-             "reverse": "Your-Children-Manual-address",
+             "reverse": "your-children:Your-Children-Manual-address",
              "change_link_description": "child's address"},
         ]
