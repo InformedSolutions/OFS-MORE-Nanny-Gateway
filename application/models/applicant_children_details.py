@@ -84,6 +84,7 @@ class ApplicantChildrenDetailsSerializer(serializers.ModelSerializer):
         return str(data['street_line1']) + ', ' + str(data['street_line2']) + ', ' \
                + str(data['town']) + ', ' + str(data['postcode'])
 
+    @property
     def get_birth_date(self):
         data = self.data
         date_of_birth_list = str(data['date_of_birth']).split('-')
@@ -118,7 +119,7 @@ class ApplicantChildrenDetailsSerializer(serializers.ModelSerializer):
 
         return birth_date
 
-    def get_summary_table(self, i):
+    def get_summary_table(self):
         data = self.data
         child_address = self.get_address()
         birth_date = self.get_birth_date
