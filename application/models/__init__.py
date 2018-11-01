@@ -11,3 +11,4 @@ from .application_reference import *
 from .payment import *
 from .timeline_log import *
 from .arc_comments import *
+from .applicant_children_details import *
