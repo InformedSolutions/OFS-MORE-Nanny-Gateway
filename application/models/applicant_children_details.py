@@ -47,7 +47,6 @@ class ApplicantChildrenDetails(models.Model):
             'lived_abroad',
             'your_children',
             'lives_with_applicant',
-            'child',
         )
 
     @classmethod
