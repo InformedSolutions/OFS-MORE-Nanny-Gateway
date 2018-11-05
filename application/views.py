@@ -1,31 +1,28 @@
-from rest_framework.exceptions import NotFound
-from rest_framework.response import Response
-from rest_framework.filters import OrderingFilter
-from rest_framework.decorators import api_view
-from rest_framework import viewsets, status, mixins
-
-from django_filters import rest_framework as filters
 from django.http import JsonResponse
+from django_filters import rest_framework as filters
+from rest_framework import viewsets, status, mixins
+from rest_framework.decorators import api_view
+from rest_framework.exceptions import NotFound
+from rest_framework.filters import OrderingFilter
+from rest_framework.response import Response
 
-from application.models.dbs_check import DbsCheckSerializer, DbsCheck
-from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
-from application.your_children_serializer import ApplicantAllChildrenDetailsSerializer
-from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer, ApplicantChildrenDetails, \
-    ApplicantChildrenDetailsSerializer
-from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
+from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
 from application.models.applicant_personal_details import ApplicantPersonalDetails, \
     ApplicantPersonalDetailsSerializer
-from application.models.timeline_log import TimelineLogSerializer
-
-from application.models.declaration import Declaration, DeclarationSerializer
-from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
-from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
-from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
 from application.models.arc_comments import ArcComments, ArcCommentsSerializer
+from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
+from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
+from application.models.dbs_check import DbsCheckSerializer, DbsCheck
+from application.models.declaration import Declaration, DeclarationSerializer
+from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
+from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
 from application.models.timeline_log import TimelineLog
+from application.models.timeline_log import TimelineLogSerializer
 from application.query_nannies import get_nannies_query
+from application.your_children_table import get_your_children_header_table
 from .application_reference_generator import create_application_reference
-
+from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer, ApplicantChildrenDetails, \
+    ApplicantChildrenDetailsSerializer
 
 serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'applicant_personal_details': ApplicantPersonalDetailsSerializer,
@@ -36,7 +33,7 @@ serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'insurance_cover': InsuranceCoverSerializer,
                'application': NannyApplicationSerializer,
                'arc_comments': ArcCommentsSerializer,
-               'your_children': ApplicantAllChildrenDetailsSerializer,
+               'your_children': ApplicantChildrenDetailsSerializer,
                }
 
 
@@ -261,7 +258,6 @@ class ArcSearchListView(mixins.ListModelMixin, viewsets.GenericViewSet):
         else:
             return ""
 
-
     @staticmethod
     def __get_query_params(request):
         """
@@ -305,9 +301,17 @@ def summary_table(request, name, application_id):
             records = model.objects.filter(application_id=application_id)
 
             if name == 'your_children':
-                return JsonResponse(serializer(records).get_summary_table(), safe=False)
+                response_header_table = [get_your_children_header_table(records)]
 
-            if name != "childcare_address":
+                # The records list is reversed due to the order in which the records are pulled from the database being reversed.
+                response_child_tables = [serializer(record).get_summary_table() for record in
+                                         reversed(records)]
+
+                response = response_header_table + response_child_tables
+
+                return JsonResponse(response, safe=False)
+
+            elif name != "childcare_address":
                 if records:
                     return JsonResponse(serializer(records[0]).get_summary_table(), safe=False)
                 else:
