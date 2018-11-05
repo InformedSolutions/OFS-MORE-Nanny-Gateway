@@ -190,6 +190,7 @@ class YourChildrenViewSet(BaseViewSet):
     filter_fields = (
         'child_id',
         'application_id',
+        'child',
     )
 
 
