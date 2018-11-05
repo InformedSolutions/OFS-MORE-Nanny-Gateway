@@ -2,8 +2,9 @@ import datetime
 from uuid import uuid4
 
 import inflect
-from rest_framework import serializers
 from django.db import models
+from rest_framework import serializers
+
 from .nanny_application import NannyApplication
 
 
@@ -52,6 +53,11 @@ class ApplicantChildrenDetails(models.Model):
     def get_id(cls, child_id):
         return cls.objects.get(pk=child_id)
 
+    @property
+    def get_full_name(self):
+        return '{0}{1} {2}'.format(self.first_name, " " + str(self.middle_names) if self.middle_names else "",
+                                   self.last_name)
+
     class Meta:
         db_table = 'APPLICANT_CHILDREN_DETAILS'
 
@@ -98,7 +104,6 @@ class ApplicantChildrenDetailsSerializer(serializers.ModelSerializer):
         data = self.data
         child_address = self.get_address()
         birth_date = self.get_birth_date()
-        live_with_applicant_name = self.get_lives_with_applicant()
 
         return [
             {"title": self.get_name(), "id": data['child_id'], "index": 0},
@@ -117,5 +122,6 @@ class ApplicantChildrenDetailsSerializer(serializers.ModelSerializer):
             {"name": "Address",
              "value": child_address, 'pk': data['child_id'], "index": 3,
              "reverse": "your-children:Your-Children-Manual-address",
-             "change_link_description": "child's address"},
+             "change_link_description": "child's address",
+             "extra_reverse_params": [('child', data['child'])]},
         ]

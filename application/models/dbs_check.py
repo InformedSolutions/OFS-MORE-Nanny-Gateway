@@ -15,7 +15,7 @@ class DbsCheck(models.Model):
     application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     dbs_number = models.CharField(max_length=100, null=True)
     convictions = models.NullBooleanField(blank=True, null=True, default=None)
-    lived_abroad = models.BooleanField(default=None)
+    lived_abroad = models.NullBooleanField(default=None)
     is_ofsted_dbs = models.NullBooleanField(blank=True, null=True, default=None)
     on_dbs_update_service = models.NullBooleanField(blank=True, null=True, default=None)
 
