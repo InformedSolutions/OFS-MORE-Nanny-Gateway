@@ -183,6 +183,7 @@ class ArcCommentsViewSet(BaseViewSet):
         'table_pk',
         'field_name',
         'application_id',
+        'endpoint_name',
     )
 
 
