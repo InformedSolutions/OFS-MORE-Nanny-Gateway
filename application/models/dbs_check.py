@@ -18,6 +18,8 @@ class DbsCheck(models.Model):
     lived_abroad = models.NullBooleanField(default=None)
     is_ofsted_dbs = models.NullBooleanField(blank=True, null=True, default=None)
     on_dbs_update_service = models.NullBooleanField(blank=True, null=True, default=None)
+    within_three_months = models.NullBooleanField(blank=True, null=True, default=None)
+    certificate_information = models.TextField(blank=True)
 
     @property
     def timelog_fields(self):
