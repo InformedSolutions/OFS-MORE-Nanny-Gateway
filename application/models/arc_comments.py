@@ -14,7 +14,7 @@ class ArcComments(models.Model):
     table_pk = models.UUIDField(blank=True)
     endpoint_name = models.CharField(max_length=30, blank=True)
     field_name = models.CharField(max_length=40, blank=True)
-    comment = models.CharField(max_length=100, blank=True)
+    comment = models.CharField(max_length=500, blank=True)
     flagged = models.BooleanField()
 
     @classmethod
