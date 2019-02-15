@@ -20,6 +20,7 @@ class DbsCheck(models.Model):
     on_dbs_update_service = models.NullBooleanField(blank=True, null=True, default=None)
     within_three_months = models.NullBooleanField(blank=True, null=True, default=None)
     certificate_information = models.TextField(blank=True)
+    enhanced_check = models.NullBooleanField(blank=True, null=True, default=None)
 
     @property
     def timelog_fields(self):
