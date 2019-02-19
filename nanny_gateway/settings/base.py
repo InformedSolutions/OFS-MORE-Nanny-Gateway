@@ -15,7 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-APPLICATION_PREFIX = 'NA'
+APPLICATION_PREFIX = 'EY'
 
 GOVUK_SERVICE_SETTINGS = {
     'name': 'OFS',
@@ -91,6 +91,8 @@ SECRET_KEY = '539+gg!xpw4*=9-coh2uy@qm#jg+tjptafmz)r1_3=uw+n-07n'
 DEBUG = True
 
 APP_NANNY_GATEWAY_URL = 'http://localhost:8000/nanny-gateway'
+
+INTEGRATION_ADAPTER_URL = os.environ.get('APP_INTEGRATION_ADAPTER')
 
 PUBLIC_APPLICATION_URL = os.environ.get('PUBLIC_APPLICATION_URL')
 
