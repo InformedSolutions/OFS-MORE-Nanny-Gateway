@@ -104,7 +104,6 @@ venv.bak/
 .mypy_cache/
 
 xmlrunner/
-<<<<<<< HEAD
 
 */staticfiles
 nanny_gateway/staticfiles/
