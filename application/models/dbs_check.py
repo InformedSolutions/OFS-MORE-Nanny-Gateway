@@ -19,7 +19,7 @@ class DbsCheck(models.Model):
     is_ofsted_dbs = models.NullBooleanField(blank=True, null=True, default=None)
     on_dbs_update_service = models.NullBooleanField(blank=True, null=True, default=None)
     within_three_months = models.NullBooleanField(blank=True, null=True, default=None)
-    certificate_information = models.TextField(blank=True)
+    certificate_information = models.TextField(blank=True, null=True)
     enhanced_check = models.NullBooleanField(blank=True, null=True, default=None)
 
     @property
