@@ -1,7 +1,8 @@
 from uuid import uuid4
 
-from rest_framework import serializers
 from django.db import models
+from rest_framework import serializers
+
 from .nanny_application import NannyApplication
 
 
@@ -20,8 +21,8 @@ class ApplicantPersonalDetails(models.Model):
     last_name = models.CharField(blank=True, null=True, max_length=100)
     lived_abroad = models.NullBooleanField(blank=True, null=True)
     post_certificate_declaration = models.NullBooleanField(blank=True, null=True)
-    your_children = models.NullBooleanField(blank=True, null=True)
-
+    known_to_social_services = models.NullBooleanField(blank=True, null=True, default=None)
+    reasons_known_to_social_services = models.TextField(null=True, default="")
 
     @property
     def timelog_fields(self):
@@ -44,7 +45,8 @@ class ApplicantPersonalDetails(models.Model):
 
     @property
     def get_full_name(self):
-        return "{0}{1} {2}".format(self.first_name, (" "+self.middle_names if self.middle_names else ""), self.last_name)
+        return "{0}{1} {2}".format(self.first_name, (" " + self.middle_names if self.middle_names else ""),
+                                   self.last_name)
 
     class Meta:
         db_table = 'APPLICANT_PERSONAL_DETAILS'
@@ -94,21 +96,20 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
         birth_year = date_of_birth_list[0]
         birth_date = birth_day + ' ' + birth_month_string + ' ' + birth_year
         return [
-                {"title": "Your personal details", "id": data['personal_detail_id'], "index": 0},
-                {"name": "Your name",
-                 "value": self.get_name(),
-                 'pk': data['personal_detail_id'], "index": 1,
-                 "reverse": "personal-details:Personal-Details-Name",
-                 "change_link_description": "your name"},
-                {"name": "Date of birth",
-                 "value": birth_date, 'pk': data['personal_detail_id'], "index": 2,
-                 "reverse": "personal-details:Personal-Details-Date-Of-Birth",
-                 "change_link_description": "your date of birth"},
-                {"name": "Have you lived abroad in the last 5 years?",
-                 "value": 'Yes' if data['lived_abroad'] else 'No', 'pk': data['personal_detail_id'], "index": 4,
-                 "reverse": "personal-details:Personal-Details-Lived-Abroad"},
-                {"name": "Do you have children of your own under 16?",
-                 "value": 'Yes' if data['your_children'] else 'No', 'pk': data['personal_detail_id'], "index": 5,
-                 "reverse": "personal-details:Personal-Details-Your-Children"},
-            ]
-      
+            {"title": "Your personal details", "id": data['personal_detail_id'], "index": 0},
+            {"name": "Your name",
+             "value": self.get_name(),
+             'pk': data['personal_detail_id'], "index": 1,
+             "reverse": "personal-details:Personal-Details-Name",
+             "change_link_description": "your name"},
+            {"name": "Date of birth",
+             "value": birth_date, 'pk': data['personal_detail_id'], "index": 2,
+             "reverse": "personal-details:Personal-Details-Date-Of-Birth",
+             "change_link_description": "your date of birth"},
+            {"name": "Have you lived abroad in the last 5 years?",
+             "value": 'Yes' if data['lived_abroad'] else 'No', 'pk': data['personal_detail_id'], "index": 4,
+             "reverse": "personal-details:Personal-Details-Lived-Abroad"},
+            {"name": "Do you have children of your own under 16?",
+             "value": 'Yes' if data['your_children'] else 'No', 'pk': data['personal_detail_id'], "index": 5,
+             "reverse": "personal-details:Personal-Details-Your-Children"},
+        ]
