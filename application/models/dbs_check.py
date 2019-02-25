@@ -63,39 +63,33 @@ class DbsCheckSerializer(serializers.ModelSerializer):
              "value": self.get_bool_as_string(fields['is_ofsted_dbs']),
              "reverse": "dbs:DBS-Type-View",
              "change_link_description": "answer to having an Ofsted DBS Check"},
-        ]
-
-        if fields['is_ofsted_dbs']:
-            dbs_page_link = 'dbs:Capita-DBS-Details-View'
-        elif not fields['is_ofsted_dbs']:
-            dbs_page_link = 'dbs:Non-Capita-DBS-Details-View'
-
-        dbs_number_data = {
+            {
             "name": "DBS certificate number",
             "value": fields['dbs_number'],
-            "reverse": dbs_page_link,
+            "reverse": 'dbs:Capita-DBS-Details-View',
             "change_link_description": "DBS certificate number",
         }
+            ]
 
-        convictions_data = {
-            "name": "Do you have any criminal cautions or convictions?",
-            "value": self.get_bool_as_string(fields['convictions']),
-            "reverse": "dbs:Capita-DBS-Details-View",
-            "change_link_description": "answer on criminal cautions or convictions"
+        enhanced_check_data = {
+            "name": "Is it an enhanced check for home-based childcare?",
+            "value": self.get_bool_as_string(fields['enhanced_check']),
+            "reverse": "dbs:DBS-Type-View",
+            "change_link_description": "answer to having an enhanced_check"
         }
+
 
         on_dbs_update_service_data = {
             "name": "Are you on the DBS update service?",
             "value": self.get_bool_as_string(fields['on_dbs_update_service']),
-            "reverse": "dbs:DBS-Update-Service-Page",
+            "reverse": "dbs:DBS-Type-View",
             "change_link_description": "answer to being on the DBS update service"
         }
 
-        if fields['is_ofsted_dbs']:
-            return_json.append(dbs_number_data)
-            return_json.append(convictions_data)
-        elif not fields['is_ofsted_dbs']:
+        if not fields['is_ofsted_dbs']:
+            return_json.append(enhanced_check_data)
             return_json.append(on_dbs_update_service_data)
-            return_json.append(dbs_number_data)
+        elif fields['is_ofsted_dbs'] and not fields['within_three_months']:
+            return_json.append(on_dbs_update_service_data)
 
         return return_json
