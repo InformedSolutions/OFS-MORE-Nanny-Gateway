@@ -36,7 +36,8 @@ class ApplicantPersonalDetails(models.Model):
             'middle_names',
             'last_name',
             'lived_abroad',
-            'your_children'
+            'known_to_social_services',
+            'reasons_known_to_social_services'
         )
 
     @classmethod
@@ -95,7 +96,8 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
             birth_month_string = 'Dec'
         birth_year = date_of_birth_list[0]
         birth_date = birth_day + ' ' + birth_month_string + ' ' + birth_year
-        return [
+
+        summary_table_list = [
             {"title": "Your personal details", "id": data['personal_detail_id'], "index": 0},
             {"name": "Your name",
              "value": self.get_name(),
@@ -109,7 +111,16 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
             {"name": "Have you lived abroad in the last 5 years?",
              "value": 'Yes' if data['lived_abroad'] else 'No', 'pk': data['personal_detail_id'], "index": 4,
              "reverse": "personal-details:Personal-Details-Lived-Abroad"},
-            {"name": "Do you have children of your own under 16?",
-             "value": 'Yes' if data['your_children'] else 'No', 'pk': data['personal_detail_id'], "index": 5,
+            {"name": "Known to council social Services?",
+             "value": 'Yes' if data['known_to_social_services'] else 'No', 'pk': data['personal_detail_id'], "index": 5,
              "reverse": "personal-details:Personal-Details-Your-Children"},
         ]
+
+        if data['known_to_social_services'] is True:
+            summary_table_list.append(
+                {"name": "Tell us why",
+                 "value": data['reasons_known_to_social_services'], 'pk': data['personal_detail_id'], "index": 6,
+                 "reverse": 'personal-details:Personal-Details-Your-Children'},
+            )
+
+        return summary_table_list

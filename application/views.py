@@ -186,18 +186,6 @@ class ArcCommentsViewSet(BaseViewSet):
         'endpoint_name',
     )
 
-
-class YourChildrenViewSet(BaseViewSet):
-    lookup_field = 'child_id'
-    queryset = ApplicantChildrenDetails.objects.all()
-    serializer_class = ApplicantChildrenDetailsSerializer
-    filter_fields = (
-        'child_id',
-        'application_id',
-        'child',
-    )
-
-
 class ArcSearchListView(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     A viewset containing a list() function.
