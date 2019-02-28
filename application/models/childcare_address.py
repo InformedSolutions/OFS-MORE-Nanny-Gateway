@@ -21,6 +21,7 @@ class ChildcareAddress(models.Model):
     county = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
     postcode = models.CharField(max_length=100, blank=True, null=True)
+    home_address = models.NullBooleanField(blank=True, null=True)
 
     @classmethod
     def get_id(cls, childcare_address_id):
