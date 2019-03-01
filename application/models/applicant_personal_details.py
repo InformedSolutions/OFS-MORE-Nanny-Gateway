@@ -19,8 +19,6 @@ class ApplicantPersonalDetails(models.Model):
     first_name = models.CharField(blank=True, null=True, max_length=100)
     middle_names = models.CharField(blank=True, null=True, max_length=100)
     last_name = models.CharField(blank=True, null=True, max_length=100)
-    lived_abroad = models.NullBooleanField(blank=True, null=True)
-    post_certificate_declaration = models.NullBooleanField(blank=True, null=True)
     known_to_social_services = models.NullBooleanField(blank=True, null=True, default=None)
     reasons_known_to_social_services = models.TextField(null=True, default="")
 
@@ -35,7 +33,6 @@ class ApplicantPersonalDetails(models.Model):
             'first_name',
             'middle_names',
             'last_name',
-            'lived_abroad',
             'known_to_social_services',
             'reasons_known_to_social_services'
         )
@@ -108,18 +105,15 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
              "value": birth_date, 'pk': data['personal_detail_id'], "index": 2,
              "reverse": "personal-details:Personal-Details-Date-Of-Birth",
              "change_link_description": "your date of birth"},
-            {"name": "Have you lived abroad in the last 5 years?",
-             "value": 'Yes' if data['lived_abroad'] else 'No', 'pk': data['personal_detail_id'], "index": 4,
-             "reverse": "personal-details:Personal-Details-Lived-Abroad"},
             {"name": "Known to council social Services?",
-             "value": 'Yes' if data['known_to_social_services'] else 'No', 'pk': data['personal_detail_id'], "index": 5,
+             "value": 'Yes' if data['known_to_social_services'] else 'No', 'pk': data['personal_detail_id'], "index": 4,
              "reverse": "personal-details:Personal-Details-Your-Children"},
         ]
 
         if data['known_to_social_services'] is True:
             summary_table_list.append(
                 {"name": "Tell us why",
-                 "value": data['reasons_known_to_social_services'], 'pk': data['personal_detail_id'], "index": 6,
+                 "value": data['reasons_known_to_social_services'], 'pk': data['personal_detail_id'], "index": 5,
                  "reverse": 'personal-details:Personal-Details-Your-Children'},
             )
 
