@@ -19,7 +19,6 @@ class ApplicantPersonalDetails(models.Model):
     first_name = models.CharField(blank=True, null=True, max_length=100)
     middle_names = models.CharField(blank=True, null=True, max_length=100)
     last_name = models.CharField(blank=True, null=True, max_length=100)
-    post_certificate_declaration = models.NullBooleanField(blank=True, null=True)
     known_to_social_services = models.NullBooleanField(blank=True, null=True, default=None)
     reasons_known_to_social_services = models.TextField(null=True, default="")
 
