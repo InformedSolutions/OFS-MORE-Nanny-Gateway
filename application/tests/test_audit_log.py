@@ -84,7 +84,6 @@ class NannyAuditLogsTests(TestCase):
             'first_name',
             'middle_names',
             'last_name',
-            'lived_abroad',
             'known_to_social_services',
             'reasons_known_to_social_services'
         )
