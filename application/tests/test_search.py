@@ -43,7 +43,7 @@ class SearchTests(TestCase):
                                 date_of_birth='2002-04-03',
                                 home_address_postcode='M45 7PS',
                                 childcare_postcode_list=['LL19 9LT'],
-                                application_reference="NA0000001")
+                                application_reference="0000001")
         self.create_application(application_id='26b0a49b-160f-4a8b-b3df-e888092c77e9',
                                 first_name='Wock',
                                 last_name='Peter',
@@ -252,7 +252,7 @@ class SearchTests(TestCase):
         Test to search for an application_reference number.
         """
         self.create_applications()
-        mock_request = MockSearchRequest(application_reference='NA0000001')
+        mock_request = MockSearchRequest(application_reference='0000001')
 
         response = ArcSearchListView().list(mock_request)
 
