@@ -78,7 +78,7 @@ class ApplicantHomeAddressSerializer(serializers.ModelSerializer):
                  "section": "applicant_personal_details_section",
                  "reverse": "personal-details:Personal-Details-Manual-Address",
                  "change_link_description": "your home address"},
-                {"name": "Will you work and live at the same address?",
+                {"name": "Do you currently live and work at the same address?",
                  "value": self.get_bool_as_string(data['childcare_address']),
                  "section": "childcare_address_section",
                  'pk': data['home_address_id'], "index": 1,
