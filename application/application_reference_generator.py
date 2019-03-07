@@ -3,7 +3,7 @@ Utility functions for generating a new unique application reference number
 """
 
 from .models import NannyApplication
-from application.services import noo_integration_service
+from .services import noo_integration_service
 import logging
 
 logger = logging.getLogger(__name__)
