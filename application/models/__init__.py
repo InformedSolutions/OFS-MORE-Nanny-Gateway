@@ -7,6 +7,7 @@ from .applicant_personal_details import *
 from .applicant_home_address import *
 from .insurance_cover import *
 from .dbs_check import *
+from .application_reference import *
 from .payment import *
 from .timeline_log import *
 from .arc_comments import *
