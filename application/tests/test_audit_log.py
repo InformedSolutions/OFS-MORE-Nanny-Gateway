@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from rest_framework.test import RequestsClient
 
-from application import models
+from ..models import *
 
 
 class NannyAuditLogsTests(TestCase):
@@ -14,30 +14,30 @@ class NannyAuditLogsTests(TestCase):
         cls.client = RequestsClient()
 
     def test_creating_application_creates_timeline_log(self):
-        application = models.NannyApplication.objects.create()
-        timeline_qset = models.TimelineLog.objects.filter(object_id=application.pk)
+        application = NannyApplication.objects.create()
+        timeline_qset = TimelineLog.objects.filter(object_id=application.pk)
 
         self.assertTrue(timeline_qset.exists())
         self.assertEqual(timeline_qset[0].extra_data['action'], 'created by')
         self.assertEqual(len(timeline_qset), 1)
 
     def test_submitting_application_creates_timeline_log(self):
-        application = models.NannyApplication.objects.create(application_status='DRAFTING')
+        application = NannyApplication.objects.create(application_status='DRAFTING')
         application.application_status = 'SUBMITTED'
         application.save()
 
-        timeline_qset = models.TimelineLog.objects.filter(object_id=application.pk)
+        timeline_qset = TimelineLog.objects.filter(object_id=application.pk)
 
         self.assertTrue(timeline_qset.exists())
         self.assertEqual(timeline_qset[1].extra_data['action'], 'submitted by')
         self.assertEqual(len(timeline_qset), 2)
 
     def test_resubmitting_application_creates_timeline_log(self):
-        application = models.NannyApplication.objects.create(application_status='FURTHER_INFORMATION')
+        application = NannyApplication.objects.create(application_status='FURTHER_INFORMATION')
         application.application_status = 'SUBMITTED'
         application.save()
 
-        timeline_qset = models.TimelineLog.objects.filter(object_id=application.pk)
+        timeline_qset = TimelineLog.objects.filter(object_id=application.pk)
 
         self.assertTrue(timeline_qset.exists())
         self.assertEqual(timeline_qset[1].extra_data['action'], 'resubmitted by')
@@ -45,13 +45,12 @@ class NannyAuditLogsTests(TestCase):
 
     def test_all_models_are_tracked_by_timeline_log(self):
         models_to_exclude = [
-            models.NannyApplication,
-            models.ChildcareAddress,
-            models.TimelineLog,
-            models.Declaration,
-            models.ApplicationReference,
-            models.Payment,
-            models.ArcComments
+            NannyApplication,
+            ChildcareAddress,
+            TimelineLog,
+            Declaration,
+            Payment,
+            ArcComments
         ]
 
         application_models = apps.get_app_config('application').get_models()
@@ -75,8 +74,8 @@ class NannyAuditLogsTests(TestCase):
                 'move_in_year'
             )
 
-        self.assertEqual(models.ApplicantHomeAddress().timelog_fields, exp_fields)
-        self.assertTrue(all([hasattr(models.ApplicantHomeAddress(), field) for field in exp_fields]))
+        self.assertEqual(ApplicantHomeAddress().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(ApplicantHomeAddress(), field) for field in exp_fields]))
 
     def test_applicant_personal_details_timelog_fields(self):
         exp_fields = (
@@ -88,8 +87,8 @@ class NannyAuditLogsTests(TestCase):
             'reasons_known_to_social_services'
         )
 
-        self.assertEqual(models.ApplicantPersonalDetails().timelog_fields, exp_fields)
-        self.assertTrue(all([hasattr(models.ApplicantPersonalDetails(), field) for field in exp_fields]))
+        self.assertEqual(ApplicantPersonalDetails().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(ApplicantPersonalDetails(), field) for field in exp_fields]))
 
     def test_childcare_training_timelog_fields(self):
         exp_fields = (
@@ -98,8 +97,8 @@ class NannyAuditLogsTests(TestCase):
             'no_training'
         )
 
-        self.assertEqual(models.ChildcareTraining().timelog_fields, exp_fields)
-        self.assertTrue(all([hasattr(models.ChildcareTraining(), field) for field in exp_fields]))
+        self.assertEqual(ChildcareTraining().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(ChildcareTraining(), field) for field in exp_fields]))
 
     def test_dbs_check_timelog_fields(self):
         exp_fields = (
@@ -109,8 +108,8 @@ class NannyAuditLogsTests(TestCase):
             'on_dbs_update_service'
         )
 
-        self.assertEqual(models.DbsCheck().timelog_fields, exp_fields)
-        self.assertTrue(all([hasattr(models.DbsCheck(), field) for field in exp_fields]))
+        self.assertEqual(DbsCheck().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(DbsCheck(), field) for field in exp_fields]))
 
     def test_first_aid_training_timelog_fields(self):
         exp_fields = (
@@ -119,16 +118,16 @@ class NannyAuditLogsTests(TestCase):
             'course_date'
         )
 
-        self.assertEqual(models.FirstAidTraining().timelog_fields, exp_fields)
-        self.assertTrue(all([hasattr(models.FirstAidTraining(), field) for field in exp_fields]))
+        self.assertEqual(FirstAidTraining().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(FirstAidTraining(), field) for field in exp_fields]))
 
     def test_insurance_cover_timelog_fields(self):
         exp_fields = (
             'public_liability',
         )
 
-        self.assertEqual(models.InsuranceCover().timelog_fields, exp_fields)
-        self.assertTrue(all([hasattr(models.InsuranceCover(), field) for field in exp_fields]))
+        self.assertEqual(InsuranceCover().timelog_fields, exp_fields)
+        self.assertTrue(all([hasattr(InsuranceCover(), field) for field in exp_fields]))
 
     def test_user_updating_a_flagged_field_creates_timeline_log(self):
         self.skipTest('NotImplemented')
@@ -147,14 +146,14 @@ class NannyAuditLogsTests(TestCase):
             }
         )
 
-        timeline_qset = models.TimelineLog.objects.filter(object_id='3141592654')
+        timeline_qset = TimelineLog.objects.filter(object_id='3141592654')
 
         self.assertEqual(response.status_code, 201)
         self.assertTrue(timeline_qset.exists())
 
     def test_list_request_to_timeline_log_endpoint_returns_associated_timeline_logs_only(self):
-        instance_1 = models.NannyApplication.objects.create()
-        instance_2 = models.NannyApplication.objects.create()
+        instance_1 = NannyApplication.objects.create()
+        NannyApplication.objects.create()
 
         response = self.client.get(
             settings.PUBLIC_APPLICATION_URL + '/api/v1/timeline-log/',
