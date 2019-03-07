@@ -15,8 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-APPLICATION_PREFIX = 'EY'
-
 GOVUK_SERVICE_SETTINGS = {
     'name': 'OFS',
     'phase': 'beta',
