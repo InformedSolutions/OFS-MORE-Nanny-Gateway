@@ -15,8 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-APPLICATION_PREFIX = 'NA'
-
 GOVUK_SERVICE_SETTINGS = {
     'name': 'OFS',
     'phase': 'beta',
@@ -92,6 +90,8 @@ DEBUG = True
 
 APP_NANNY_GATEWAY_URL = 'http://localhost:8000/nanny-gateway'
 
+INTEGRATION_ADAPTER_URL = os.environ.get('APP_INTEGRATION_ADAPTER')
+
 PUBLIC_APPLICATION_URL = os.environ.get('PUBLIC_APPLICATION_URL')
 
 URL_PREFIX = '/nanny-gateway'
@@ -118,11 +118,11 @@ ALLOWED_HOSTS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_DB', 'postgres'),
-        'USER': os.environ.get('POSTGRES_USER', 'ofsted'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'OfstedB3ta'),
-        'HOST': os.environ.get('POSTGRES_HOST', '130.130.52.132'),
-        'PORT': os.environ.get('POSTGRES_PORT', '5462')
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PORT': os.environ.get('POSTGRES_PORT')
     }
 }
 

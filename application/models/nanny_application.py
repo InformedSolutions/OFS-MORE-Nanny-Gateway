@@ -64,8 +64,8 @@ class NannyApplication(models.Model):
     date_updated = models.DateTimeField(blank=True, null=True)
     date_accepted = models.DateTimeField(blank=True, null=True)
     date_submitted = models.DateTimeField(blank=True, null=True)
-    application_reference = models.CharField(blank=True, null=True, max_length=9,
-                                             validators=[RegexValidator(r'(\w{2})([0-9]{7})')])
+    application_reference = models.CharField(blank=True, null=True, max_length=7,
+                                             validators=[RegexValidator(r'([0-9]{7})')])
     ofsted_visit_email_sent = models.DateTimeField(blank=True, null=True)
     address_to_be_provided = models.NullBooleanField(blank=True, null=True, default=None)
 
