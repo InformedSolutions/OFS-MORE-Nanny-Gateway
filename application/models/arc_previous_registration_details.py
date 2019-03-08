@@ -1,7 +1,10 @@
 from uuid import uuid4
-from django.db import models
+
 from rest_framework import serializers
+from django.db import models
 from application.models import NannyApplication
+
+from .applicant_personal_details import ApplicantPersonalDetails
 
 class NannyPreviousRegistrationDetails(models.Model):
     """
@@ -9,9 +12,27 @@ class NannyPreviousRegistrationDetails(models.Model):
     """
     previous_registration_id = models.UUIDField(primary_key=True, default=uuid4)
     application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
-    previous_registration = models.BooleanField(default=False)
+    personal_detail_id = models.ForeignKey(ApplicantPersonalDetails, on_delete=models.CASCADE,
+                                           db_column='personal_detail_id', null=True)
+    previous_registration = models.NullBooleanField(blank=True, null=True)
     individual_id = models.IntegerField(default=0, null=True, blank=True)
-    five_years_in_UK = models.BooleanField(default=False)
+    five_years_in_UK = models.NullBooleanField(blank=True, null=True)
+
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'previous_registration',
+            'individual_id',
+            'five_years_in_UK'
+        )
+
+    @classmethod
+    def get_id(cls, previous_registration_id):
+        return cls.objects.get(pk=previous_registration_id)
 
     @classmethod
     def get_id(cls, app_id):
