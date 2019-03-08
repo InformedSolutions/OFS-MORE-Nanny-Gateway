@@ -48,6 +48,9 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api/v1/application/application_reference/(?P<application_id>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/$',
         views.retrieve_reference_number, name='Assign-Application-Reference-View'),
+    url(
+        r'^api/v1/payment_notification',
+        views.send_payment_notification, name='Send-Payment_Notification-View'),
 ]
 
 

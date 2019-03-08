@@ -15,3 +15,4 @@ django-rest-swagger==2.2.0
 django-filter==1.1.0
 inflect==0.2.5
 django-timeline-logger==1.0
+boto3==1.7.66

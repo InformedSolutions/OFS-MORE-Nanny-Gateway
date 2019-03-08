@@ -183,3 +183,16 @@ SWAGGER_SETTINGS = {
     'DOC_EXPANSION': True,
     'JSON_EDITOR': True
 }
+
+# AWS SQS keys
+AWS_SQS_ACCESS_KEY_ID = os.environ.get('AWS_SQS_ACCESS_KEY_ID')
+AWS_SQS_SECRET_ACCESS_KEY = os.environ.get('AWS_SQS_SECRET_ACCESS_KEY')
+SQS_QUEUE_PREFIX = os.environ.get('SQS_QUEUE_PREFIX', 'DEV')
+
+PAYMENT_NOTIFICATIONS_QUEUE_NAME = SQS_QUEUE_PREFIX + '_PAYMENT_NOTIFICATIONS'
+
+# The prefix added before a URN for finance system reconciliation purposes
+PAYMENT_URN_PREFIX = 'EY'
+
+# The prefix used to distinguish Worldpay payment entries for MORE
+PAYMENT_REFERENCE_PREFIX = 'MO'

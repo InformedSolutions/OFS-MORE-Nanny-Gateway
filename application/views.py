@@ -1,3 +1,6 @@
+import json
+
+from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, status, mixins
@@ -341,6 +344,31 @@ def retrieve_reference_number(request, application_id):
             })
         except Exception as e:
             logger.error('Failed to allocate application reference number: ' + str(e))
+            return yield503(request)
+    except NannyApplication.DoesNotExist:
+        return yield404(request)
+
+
+@api_view(['POST'])
+def send_payment_notification(request):
+    """
+    Method for sending a payment notification to Amazon SQS.
+    ---
+    Parameters in the POST body must include application_id (string) and amount (int)
+    """
+    try:
+
+        application_id = request.data.get('application_id')
+        amount = request.data.get('amount')
+
+        # Check application exists
+        NannyApplication.objects.get(pk=application_id)
+
+        try:
+            noo_integration_service.send_payment_notification(application_id, amount)
+            return Response(status=status.HTTP_201_CREATED)
+        except Exception as e:
+            logger.error('Failed to dispatch payment notification request: ' + str(e))
             return yield503(request)
     except NannyApplication.DoesNotExist:
         return yield404(request)
