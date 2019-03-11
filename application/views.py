@@ -24,7 +24,7 @@ from application.models.timeline_log import TimelineLogSerializer
 from application.query_nannies import get_nannies_query
 from application.your_children_table import get_your_children_header_table
 from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer, ApplicantChildrenDetails, \
-    ApplicantChildrenDetailsSerializer
+    ApplicantChildrenDetailsSerializer, NannyPreviousRegistrationDetails, PreviousRegistrationSerializer
 from .services import noo_integration_service
 import logging
 
@@ -38,6 +38,7 @@ serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'application': NannyApplicationSerializer,
                'arc_comments': ArcCommentsSerializer,
                'your_children': ApplicantChildrenDetailsSerializer,
+               'nanny-previous-registration-details': PreviousRegistrationSerializer
                }
 
 logger = logging.getLogger(__name__)
@@ -190,6 +191,17 @@ class ArcCommentsViewSet(BaseViewSet):
         'field_name',
         'application_id',
         'endpoint_name',
+    )
+
+
+class PreviousRegistrationViewSet(BaseViewSet):
+    queryset = NannyPreviousRegistrationDetails.objects.all()
+    serializer_class = PreviousRegistrationSerializer
+    filter_fields = (
+        'application_id',
+        'previous_registration',
+        'individual_id',
+        'five_years_in_UK',
     )
 
 class ArcSearchListView(mixins.ListModelMixin, viewsets.GenericViewSet):

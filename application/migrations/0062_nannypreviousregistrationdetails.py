@@ -18,9 +18,9 @@ class Migration(migrations.Migration):
             name='NannyPreviousRegistrationDetails',
             fields=[
                 ('previous_registration_id', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
-                ('previous_registration', models.BooleanField(default=False)),
+                ('previous_registration', models.NullBooleanField(default=False)),
                 ('individual_id', models.IntegerField(blank=True, default=0, null=True)),
-                ('five_years_in_UK', models.BooleanField(default=False)),
+                ('five_years_in_UK', models.NullBooleanField(default=False)),
                 ('application_id', models.ForeignKey(db_column='application_id', on_delete=django.db.models.deletion.CASCADE, to='application.NannyApplication')),
             ],
             options={

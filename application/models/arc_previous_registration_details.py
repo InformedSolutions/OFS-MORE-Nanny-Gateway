@@ -4,16 +4,15 @@ from rest_framework import serializers
 from django.db import models
 from application.models import NannyApplication
 
-from .applicant_personal_details import ApplicantPersonalDetails
-
 class NannyPreviousRegistrationDetails(models.Model):
     """
     Model for PREVIOUS_REGISTRATION_DETAILS table
     """
+
+    objects = models.Manager()
+
     previous_registration_id = models.UUIDField(primary_key=True, default=uuid4)
     application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
-    personal_detail_id = models.ForeignKey(ApplicantPersonalDetails, on_delete=models.CASCADE,
-                                           db_column='personal_detail_id', null=True)
     previous_registration = models.NullBooleanField(blank=True, null=True)
     individual_id = models.IntegerField(default=0, null=True, blank=True)
     five_years_in_UK = models.NullBooleanField(blank=True, null=True)
@@ -31,15 +30,12 @@ class NannyPreviousRegistrationDetails(models.Model):
         )
 
     @classmethod
-    def get_id(cls, previous_registration_id):
-        return cls.objects.get(pk=previous_registration_id)
-
-    @classmethod
     def get_id(cls, app_id):
         return cls.objects.get(application_id=app_id)
 
     class Meta:
         db_table = 'PREVIOUS_REGISTRATION_DETAILS'
+
 
 class PreviousRegistrationSerializer(serializers.ModelSerializer):
 
