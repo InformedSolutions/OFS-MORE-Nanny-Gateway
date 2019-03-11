@@ -2,6 +2,10 @@ from uuid import uuid4
 
 from rest_framework import serializers
 from django.db import models
+
+from django.db import models
+
+
 from application.models import NannyApplication
 
 class NannyPreviousRegistrationDetails(models.Model):
@@ -72,3 +76,4 @@ class PreviousRegistrationSerializer(serializers.ModelSerializer):
                  "reverse": "first-aid:Training-Details",
                  "change_link_description": "whether the applicant has lived in England for more than 5 years"}
             ]
+
