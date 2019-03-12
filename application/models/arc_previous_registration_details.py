@@ -47,33 +47,4 @@ class PreviousRegistrationSerializer(serializers.ModelSerializer):
         model = NannyPreviousRegistrationDetails
         fields = '__all__'
 
-    def get_bool_as_string(self, bool_field):
-        if bool_field:
-            return 'Yes'
-        else:
-            return 'No'
-
-    def get_summary_table(self):
-        data = self.data
-        previous_registration = data['previous_registration']
-        individual_id = data['individual_id']
-        five_years_in_UK = data['five_years_in_UK']
-        return [
-                {"title": "Previous registration", "id": data['previous_registration_id'], "index": 0},
-                {"name": "Previously registered with Ofsted?",
-                 "value": previous_registration,
-                 'pk': data['previous_registration_id'], "index": 1,
-                 "reverse": "previous_registration:Previous-Registration",
-                 "change_link_description": "whether the applicant has previously registered with Ofsted"},
-                {"name": "Individual ID",
-                 "value": individual_id,
-                 'pk': data['previous_registration_id'], "index": 2,
-                 "reverse": "previous_registration:Individual-Id",
-                 "change_link_description": "the individual ID"},
-                {"name": "Lived in England for more than 5 years?",
-                 "value": five_years_in_UK,
-                 'pk': data['previous_registration_id'], "index": 3,
-                 "reverse": "first-aid:Training-Details",
-                 "change_link_description": "whether the applicant has lived in England for more than 5 years"}
-            ]
 
