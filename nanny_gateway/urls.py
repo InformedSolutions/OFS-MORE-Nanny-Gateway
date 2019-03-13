@@ -39,7 +39,7 @@ router.register(r'api/v1/payment', views.PaymentViewSet)
 router.register(r'api/v1/arc-comments', views.ArcCommentsViewSet)
 router.register(r'api/v1/timeline-log', views.TimeLineLogViewSet)
 router.register(r'api/v1/arc-search', views.ArcSearchListView)
-router.register(r'api/v1/nanny-previous-registration-details', views.PreviousRegistrationViewSet)
+router.register(r'api/v1/previous-registration-details', views.PreviousRegistrationViewSet)
 
 
 urlpatterns = [
