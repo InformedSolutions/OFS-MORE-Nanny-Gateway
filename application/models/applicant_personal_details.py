@@ -1,4 +1,5 @@
 from uuid import uuid4
+import datetime
 
 from django.db import models
 from rest_framework import serializers
@@ -64,35 +65,8 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
 
     def get_summary_table(self):
         data = self.data
-        date_of_birth_list = str(data['date_of_birth']).split('-')
-        birth_day = date_of_birth_list[2]
-        birth_month = date_of_birth_list[1]
-        if birth_month == '01':
-            birth_month_string = 'Jan'
-        elif birth_month == '02':
-            birth_month_string = 'Feb'
-        elif birth_month == '03':
-            birth_month_string = 'Mar'
-        elif birth_month == '04':
-            birth_month_string = 'Apr'
-        elif birth_month == '05':
-            birth_month_string = 'May'
-        elif birth_month == '06':
-            birth_month_string = 'Jun'
-        elif birth_month == '07':
-            birth_month_string = 'Jul'
-        elif birth_month == '08':
-            birth_month_string = 'Aug'
-        elif birth_month == '09':
-            birth_month_string = 'Sep'
-        elif birth_month == '10':
-            birth_month_string = 'Oct'
-        elif birth_month == '11':
-            birth_month_string = 'Nov'
-        elif birth_month == '12':
-            birth_month_string = 'Dec'
-        birth_year = date_of_birth_list[0]
-        birth_date = birth_day + ' ' + birth_month_string + ' ' + birth_year
+        birth_date_datetime = datetime.datetime.strptime(data['date_of_birth'], '%Y-%m-%d').date()
+        birth_date = birth_date_datetime.strftime('%d/%m/%Y')
 
         summary_table_list = [
             {"title": "Your personal details", "id": data['personal_detail_id'], "index": 0},
