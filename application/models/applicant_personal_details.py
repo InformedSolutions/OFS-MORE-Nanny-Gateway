@@ -23,6 +23,7 @@ class ApplicantPersonalDetails(models.Model):
     known_to_social_services = models.NullBooleanField(blank=True, null=True, default=None)
     reasons_known_to_social_services = models.TextField(null=True, default="")
 
+
     @property
     def timelog_fields(self):
         """
