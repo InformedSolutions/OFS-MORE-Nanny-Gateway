@@ -24,7 +24,8 @@ from application.models.timeline_log import TimelineLogSerializer
 from application.query_nannies import get_nannies_query
 from application.your_children_table import get_your_children_header_table
 from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer, ApplicantChildrenDetails, \
-    ApplicantChildrenDetailsSerializer, NannyPreviousRegistrationDetails, PreviousRegistrationSerializer
+    ApplicantChildrenDetailsSerializer, NannyPreviousRegistrationDetails, PreviousRegistrationSerializer, \
+    NannyPreviousName, PreviousNameSerializer
 from .services import noo_integration_service
 import logging
 
@@ -202,6 +203,14 @@ class PreviousRegistrationViewSet(BaseViewSet):
         'previous_registration',
         'individual_id',
         'five_years_in_UK',
+    )
+
+class PreviousNameViewSet(BaseViewSet):
+    queryset = NannyPreviousName.objects.all()
+    serializer_class = PreviousNameSerializer
+    filter_fields = (
+        'application_id',
+        'previous_name_id'
     )
 
 class ArcSearchListView(mixins.ListModelMixin, viewsets.GenericViewSet):
