@@ -1,6 +1,5 @@
-import json
+import logging
 
-from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, status, mixins
@@ -9,24 +8,18 @@ from rest_framework.exceptions import NotFound
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
-from application.models.applicant_home_address import ApplicantHomeAddress, ApplicantHomeAddressSerializer
-from application.models.applicant_personal_details import ApplicantPersonalDetails, \
-    ApplicantPersonalDetailsSerializer
-from application.models.arc_comments import ArcComments, ArcCommentsSerializer
-from application.models.childcare_address import ChildcareAddress, ChildcareAddressSerializer
-from application.models.childcare_training import ChildcareTraining, ChildcareTrainingSerializer
-from application.models.dbs_check import DbsCheckSerializer, DbsCheck
-from application.models.declaration import Declaration, DeclarationSerializer
-from application.models.insurance_cover import InsuranceCover, InsuranceCoverSerializer
-from application.models.nanny_application import NannyApplication, NannyApplicationSerializer
-from application.models.timeline_log import TimelineLog
-from application.models.timeline_log import TimelineLogSerializer
-from application.query_nannies import get_nannies_query
-from application.your_children_table import get_your_children_header_table
-from .models import FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer, ApplicantChildrenDetails, \
-    ApplicantChildrenDetailsSerializer, NannyPreviousRegistrationDetails, PreviousRegistrationSerializer
+from .models import (ApplicantHomeAddress, ApplicantHomeAddressSerializer, ApplicantPersonalDetails,
+                     ApplicantPersonalDetailsSerializer, ArcComments, ArcCommentsSerializer, ChildcareAddress,
+                     ChildcareAddressSerializer, ChildcareTraining, ChildcareTrainingSerializer, DbsCheckSerializer,
+                     DbsCheck, Declaration, DeclarationSerializer, InsuranceCover, InsuranceCoverSerializer,
+                     NannyApplication, NannyApplicationSerializer, TimelineLog, TimelineLogSerializer,
+                     FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer,
+                     ApplicantChildrenDetailsSerializer, NannyPreviousRegistrationDetails,
+                     PreviousRegistrationSerializer, PreviousAddress, PreviousAddressSerializer)
+from .query_nannies import get_nannies_query
+from .your_children_table import get_your_children_header_table
 from .services import noo_integration_service
-import logging
+
 
 serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'applicant_personal_details': ApplicantPersonalDetailsSerializer,
@@ -38,7 +31,8 @@ serializers = {'applicant_home_address': ApplicantHomeAddressSerializer,
                'application': NannyApplicationSerializer,
                'arc_comments': ArcCommentsSerializer,
                'your_children': ApplicantChildrenDetailsSerializer,
-               'nanny-previous-registration-details': PreviousRegistrationSerializer
+               'nanny-previous-registration-details': PreviousRegistrationSerializer,
+               'previous-address': PreviousAddressSerializer,
                }
 
 logger = logging.getLogger(__name__)
@@ -150,7 +144,18 @@ class ApplicantHomeAddressViewSet(BaseViewSet):
     filter_fields = (
         'home_address_id',
         'personal_detail_id',
-        'application_id'
+        'application_id',
+    )
+
+
+class PreviousAddressViewSet(BaseViewSet):
+    lookup_field = 'pk'
+    queryset = PreviousAddress.objects.all().order_by('order')
+    serializer_class = PreviousAddressSerializer
+    filter_fields = (
+        'previous_address_id',
+        'person_id',
+        'person_type',
     )
 
 
@@ -203,6 +208,7 @@ class PreviousRegistrationViewSet(BaseViewSet):
         'individual_id',
         'five_years_in_UK',
     )
+
 
 class ArcSearchListView(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
@@ -311,7 +317,8 @@ def summary_table(request, name, application_id):
             if name == 'your_children':
                 response_header_table = [get_your_children_header_table(records)]
 
-                # The records list is reversed due to the order in which the records are pulled from the database being reversed.
+                # The records list is reversed due to the order in which the records are pulled from the
+                # database being reversed.
                 response_child_tables = [serializer(record).get_summary_table() for record in
                                          reversed(records)]
 
