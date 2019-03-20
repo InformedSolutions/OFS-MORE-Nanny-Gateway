@@ -206,6 +206,7 @@ class PreviousRegistrationViewSet(BaseViewSet):
     )
 
 class PreviousNameViewSet(BaseViewSet):
+    lookup_field = 'previous_name_id'
     queryset = NannyPreviousName.objects.all()
     serializer_class = PreviousNameSerializer
     filter_fields = (
