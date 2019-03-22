@@ -8,6 +8,7 @@ class NannyPreviousName(models.Model):
     """
     Model for PREVIOUS_NAME table, used to contain previous
     """
+    objects = models.Manager()
 
     # Primary key
     previous_name_id = models.UUIDField(primary_key=True, default=uuid4)
