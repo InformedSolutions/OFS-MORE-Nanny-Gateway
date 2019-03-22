@@ -13,3 +13,4 @@ from .arc_comments import *
 from .applicant_children_details import *
 from .arc_previous_registration_details import *
 from .previous_name import *
+from .previous_address import *

@@ -41,6 +41,7 @@ router.register(r'api/v1/timeline-log', views.TimeLineLogViewSet)
 router.register(r'api/v1/arc-search', views.ArcSearchListView)
 router.register(r'api/v1/previous-registration-details', views.PreviousRegistrationViewSet)
 router.register(r'api/v1/previous-name', views.PreviousNameViewSet)
+router.register(r'api/v1/previous-address', views.PreviousAddressViewSet)
 
 
 urlpatterns = [

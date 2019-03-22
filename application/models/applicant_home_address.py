@@ -60,29 +60,28 @@ class ApplicantHomeAddressSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_address(self):
-        data = self.data
-        return str(data['street_line1']) + ', ' + str(data['street_line2']) + ', ' \
-               + str(data['town']) + ', ' + str(data['postcode'])
+        return ', '.join([self.data[p]
+                          for p in ('street_line1', 'street_line2', 'town', 'county', 'postcode', 'country')
+                          if self.data[p]])
 
     def get_bool_as_string(self, bool_field):
-        if bool_field:
-            return "Yes"
-        else:
-            return "No"
+        return 'Yes' if bool_field else 'No'
 
     def get_summary_table(self):
-        data = self.data
-        home_address = self.get_address()
         return [
-                {"name": "Your home address", "value": home_address, 'pk': data['home_address_id'], "index": 3,
-                 "section": "applicant_personal_details_section",
-                 "reverse": "personal-details:Personal-Details-Manual-Address",
-                 "change_link_description": "your home address"},
-                {"name": "Do you currently live and work at the same address?",
-                 "value": self.get_bool_as_string(data['childcare_address']),
-                 "section": "childcare_address_section",
-                 'pk': data['home_address_id'], "index": 1,
-                 "reverse": "Childcare-Address-Location",
-                 "change_link_description": "answer on working and living at the same address"}
-            ]
+            {"name": "Your home address",
+             "value": self.get_address(),
+             'pk': self.data['home_address_id'],
+             "index": 3,
+             "section": "applicant_personal_details_section",
+             "reverse": "personal-details:Personal-Details-Manual-Address",
+             "change_link_description": "your home address"},
+            {"name": "Do you currently live and work at the same address?",
+             "value": self.get_bool_as_string(self.data['childcare_address']),
+             "section": "childcare_address_section",
+             'pk': self.data['home_address_id'],
+             "index": 1,
+             "reverse": "Childcare-Address-Location",
+             "change_link_description": "answer on working and living at the same address"}
+        ]
 
