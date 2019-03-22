@@ -33,6 +33,7 @@ class NannyPreviousName(models.Model):
     class Meta:
         db_table = 'PREVIOUS_NAME'
 
+        
     @property
     def timelog_fields(self):
         """
