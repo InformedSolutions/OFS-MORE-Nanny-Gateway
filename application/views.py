@@ -15,7 +15,8 @@ from .models import (ApplicantHomeAddress, ApplicantHomeAddressSerializer, Appli
                      NannyApplication, NannyApplicationSerializer, TimelineLog, TimelineLogSerializer,
                      FirstAidTraining, FirstAidTrainingSerializer, Payment, PaymentSerializer,
                      ApplicantChildrenDetailsSerializer, NannyPreviousRegistrationDetails,
-                     PreviousRegistrationSerializer, PreviousAddress, PreviousAddressSerializer)
+                     PreviousRegistrationSerializer, PreviousAddress, PreviousAddressSerializer,
+                     NannyPreviousName, PreviousNameSerializer)
 from .query_nannies import get_nannies_query
 from .your_children_table import get_your_children_header_table
 from .services import noo_integration_service
@@ -209,6 +210,14 @@ class PreviousRegistrationViewSet(BaseViewSet):
         'five_years_in_UK',
     )
 
+class PreviousNameViewSet(BaseViewSet):
+    lookup_field = 'previous_name_id'
+    queryset = NannyPreviousName.objects.all()
+    serializer_class = PreviousNameSerializer
+    filter_fields = (
+        'application_id',
+        'previous_name_id'
+    )
 
 class ArcSearchListView(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
