@@ -33,6 +33,19 @@ class NannyPreviousName(models.Model):
     class Meta:
         db_table = 'PREVIOUS_NAME'
 
+        
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'first_name',
+            'middle_names',
+            'last_name'
+        )
+
 
 class PreviousNameSerializer(serializers.ModelSerializer):
 
