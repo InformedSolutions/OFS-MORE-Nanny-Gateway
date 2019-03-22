@@ -37,6 +37,24 @@ class PreviousAddress(models.Model):
     class Meta:
         db_table = 'PREVIOUS_ADDRESS'
 
+    # noinspection SpellCheckingInspection
+    @property
+    def timelog_fields(self):
+        """
+        Specify which fields to track in this model once application is returned.
+        :return: tuple of fields which needs update tracking when application is returned
+        """
+        return (
+            'street_line1',
+            'street_line2',
+            'town',
+            'county',
+            'country',
+            'postcode',
+            'moved_in_date',
+            'moved_out_date',
+        )
+
 
 class PreviousAddressSerializer(serializers.ModelSerializer):
     class Meta:
