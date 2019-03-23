@@ -16,7 +16,7 @@ def create_application_reference():
     :return: a unique reference number for an application
     """
     integration_adapter_endpoint = settings.INTEGRATION_ADAPTER_URL
-    response = requests.get(integration_adapter_endpoint + '/api/v1/urns/')
+    response = requests.get(integration_adapter_endpoint + '/api/v1/urns/', verify=False)
 
     response_body_as_json = response.json()
     if response_body_as_json.get('error'):
