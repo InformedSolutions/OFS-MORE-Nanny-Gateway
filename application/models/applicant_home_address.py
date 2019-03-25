@@ -25,8 +25,6 @@ class ApplicantHomeAddress(models.Model):
     postcode = models.CharField(max_length=100, blank=True, null=True)
     current_address = models.NullBooleanField(blank=True, null=True, default=None)
     childcare_address = models.NullBooleanField(blank=True, null=True, default=None)
-    move_in_month = models.IntegerField(blank=True, null=True)
-    move_in_year = models.IntegerField(blank=True, null=True)
 
     @property
     def timelog_fields(self):
@@ -42,8 +40,6 @@ class ApplicantHomeAddress(models.Model):
             'country',
             'postcode',
             'current_address',
-            'move_in_month',
-            'move_in_year'
         )
 
     @classmethod

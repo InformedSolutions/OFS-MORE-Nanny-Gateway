@@ -27,6 +27,9 @@ class ApplicantPersonalDetails(models.Model):
     name_end_day = models.IntegerField(blank=True, null=True)
     name_end_month = models.IntegerField(blank=True, null=True)
     name_end_year = models.IntegerField(blank=True, null=True)
+    # Date fields for current address
+    moved_in_date = models.DateField(blank=True, null=True)
+    moved_out_date = models.DateField(blank=True, null=True)
 
     known_to_social_services = models.NullBooleanField(blank=True, null=True, default=None)
     reasons_known_to_social_services = models.TextField(null=True, default="")
