@@ -70,8 +70,6 @@ class NannyAuditLogsTests(TestCase):
                 'country',
                 'postcode',
                 'current_address',
-                'move_in_month',
-                'move_in_year'
             )
 
         self.assertEqual(ApplicantHomeAddress().timelog_fields, exp_fields)
