@@ -68,6 +68,7 @@ class NannyApplication(models.Model):
                                              validators=[RegexValidator(r'([0-9]{7})')])
     ofsted_visit_email_sent = models.DateTimeField(blank=True, null=True)
     address_to_be_provided = models.NullBooleanField(blank=True, null=True, default=None)
+    application_expiry_email_sent = models.NullBooleanField(blank=True, null=True, default=False)
 
     @classmethod
     def get_id(cls, app_id):
