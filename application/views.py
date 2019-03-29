@@ -72,12 +72,19 @@ class BaseViewSet(viewsets.ModelViewSet):
 
 
 class NannyApplicationViewSet(BaseViewSet):
+
+    # custom filter to allow range filtering on last-accessed date
+    class ApplicationFilter(filters.FilterSet):
+        last_accessed_before = filters.IsoDateTimeFilter('date_last_accessed', lookup_expr='lt')
+        last_accessed_after = filters.IsoDateTimeFilter('date_last_accessed', lookup_expr='gt')
+
+        class Meta:
+            model = NannyApplication
+            fields = ['application_id', 'application_status', 'last_accessed_before', 'last_accessed_after']
+
     queryset = NannyApplication.objects.all()
     serializer_class = NannyApplicationSerializer
-    filter_fields = (
-        'application_id',
-        'application_status'
-    )
+    filter_class = ApplicationFilter
 
 
 class ChildcareAddressViewSet(BaseViewSet):
