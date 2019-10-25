@@ -80,10 +80,10 @@ class DbsCheckSerializer(serializers.ModelSerializer):
 
 
         on_dbs_update_service_data = {
-            "name": "Are you on the DBS update service?",
+            "name": "Are you on the DBS Update Service?",
             "value": self.get_bool_as_string(fields['on_dbs_update_service']),
             "reverse": "dbs:DBS-Type-View",
-            "change_link_description": "answer to being on the DBS update service"
+            "change_link_description": "answer to being on the DBS Update Service"
         }
 
         if not fields['is_ofsted_dbs']:
