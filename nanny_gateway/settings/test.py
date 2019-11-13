@@ -1,7 +1,8 @@
 from .base import *
 
-INSTALLED_APPS = BUILTIN_APPS + THIRD_PARTY_APPS + PROJECT_APPS
+DEBUG = False
 
+INSTALLED_APPS = BUILTIN_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 # Automatic Django logging at the INFO level (i.e everything the comes to the console when ran locally)
 LOGGING = {
