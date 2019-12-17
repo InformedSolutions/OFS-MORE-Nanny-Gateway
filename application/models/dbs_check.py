@@ -1,7 +1,6 @@
 from uuid import uuid4
 from django.db import models
 from rest_framework import serializers
-from django.utils.safestring import mark_safe
 
 from .nanny_application import NannyApplication
 
