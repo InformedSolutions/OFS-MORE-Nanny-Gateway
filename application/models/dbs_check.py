@@ -1,6 +1,7 @@
 from uuid import uuid4
 from django.db import models
 from rest_framework import serializers
+from django.utils.safestring import mark_safe
 
 from .nanny_application import NannyApplication
 
@@ -72,7 +73,7 @@ class DbsCheckSerializer(serializers.ModelSerializer):
             ]
 
         enhanced_check_data = {
-            "name": "Is it an enhanced check for home-based childcare?",
+            "name": "enhanced_check",
             "value": self.get_bool_as_string(fields['enhanced_check']),
             "reverse": "dbs:DBS-Type-View",
             "change_link_description": "answer to having an enhanced_check"
