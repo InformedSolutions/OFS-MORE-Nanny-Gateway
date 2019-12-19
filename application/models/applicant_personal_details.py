@@ -81,6 +81,9 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
         birth_date_datetime = datetime.datetime.strptime(data['date_of_birth'], '%Y-%m-%d').date()
         birth_date = birth_date_datetime.strftime('%d/%m/%Y')
 
+        moved_in_date_datetime = datetime.datetime.strptime(data['moved_in_date'], '%Y-%m-%d').date()
+        moved_in_date = moved_in_date_datetime.strftime('%d/%m/%Y')
+
         summary_table_list = [
             {"title": "Your personal details", "id": data['personal_detail_id'], "index": 0},
             {"name": "Title",
@@ -97,8 +100,11 @@ class ApplicantPersonalDetailsSerializer(serializers.ModelSerializer):
              "value": birth_date, 'pk': data['personal_detail_id'], "index": 3,
              "reverse": "personal-details:Personal-Details-Date-Of-Birth",
              "change_link_description": "your date of birth"},
+            {"name": "Moved in date",
+                    "value": moved_in_date, "index": 4,
+                "reverse": "personal-details:Personal-Details-Manual-Address"},
             {"name": "Known to council social Services?",
-             "value": 'Yes' if data['known_to_social_services'] else 'No', 'pk': data['personal_detail_id'], "index": 4,
+             "value": 'Yes' if data['known_to_social_services'] else 'No', 'pk': data['personal_detail_id'], "index": 5,
              "reverse": "personal-details:Personal-Details-Your-Children"},
         ]
 
