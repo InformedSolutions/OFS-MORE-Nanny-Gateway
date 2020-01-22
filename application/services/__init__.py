@@ -1,0 +1,1 @@
+from .noo_integration_service import create_application_reference

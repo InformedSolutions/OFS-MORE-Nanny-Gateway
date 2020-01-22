@@ -1,4 +1,4 @@
-FROM python:3.5-slim
+FROM python:3.6-slim
 ENV PYTHONUNBUFFERED 1
 ARG PROJECT_SETTINGS
 
@@ -13,11 +13,11 @@ RUN apt-get update && \
                 netcat \
         && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /source
+ADD requirements.txt /source/
 RUN mkdir /source/logs
 WORKDIR /source
-ADD . /source/
 RUN pip install -r requirements.txt
+ADD . /source/
 RUN chmod +x /source/docker-entrypoint.sh
 EXPOSE 8000
 CMD ["/source/docker-entrypoint.sh"]

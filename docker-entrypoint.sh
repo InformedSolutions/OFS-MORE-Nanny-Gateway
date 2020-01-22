@@ -10,7 +10,7 @@ echo Connected!;
 # Create database migration files
 echo "Create database migration files"
 python manage.py makemigrations --settings=$PROJECT_SETTINGS
-python manage.py makemigrations application --settings=$PROJECT_SETTINGS
+# python manage.py makemigrations application --settings=$PROJECT_SETTINGS
 
 # Apply database migrations
 echo "Apply database migrations"
