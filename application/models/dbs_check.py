@@ -12,7 +12,7 @@ class DbsCheck(models.Model):
     objects = models.Manager()
 
     dbs_id = models.UUIDField(primary_key=True, default=uuid4)
-    application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
+    application_id = models.OneToOneField(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     dbs_number = models.CharField(max_length=100, null=True)
     convictions = models.NullBooleanField(blank=True, null=True, default=None)
     lived_abroad = models.NullBooleanField(default=None)
