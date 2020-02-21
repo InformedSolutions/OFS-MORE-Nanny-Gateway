@@ -13,7 +13,7 @@ class ChildcareTraining(models.Model):
     objects = models.Manager()
 
     childcare_training_id = models.UUIDField(primary_key=True, default=uuid4)
-    application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
+    application_id = models.OneToOneField(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     level_2_training = models.NullBooleanField(blank=True, null=True, default=None)
     common_core_training = models.NullBooleanField(blank=True, null=True, default=None)
     no_training = models.NullBooleanField(blank=True, null=True, default=None)

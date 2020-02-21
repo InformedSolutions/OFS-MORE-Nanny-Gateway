@@ -12,7 +12,7 @@ class InsuranceCover(models.Model):
     objects = models.Manager()
 
     insurance_cover_id = models.UUIDField(primary_key=True, default=uuid4)
-    application_id = models.ForeignKey(
+    application_id = models.OneToOneField(
         NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     public_liability = models.NullBooleanField(blank=True, null=True, default=None)
 
