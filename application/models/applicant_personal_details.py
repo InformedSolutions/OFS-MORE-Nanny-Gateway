@@ -14,7 +14,7 @@ class ApplicantPersonalDetails(models.Model):
     # Managers
     objects = models.Manager()
 
-    application_id = models.ForeignKey(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
+    application_id = models.OneToOneField(NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     personal_detail_id = models.UUIDField(primary_key=True, default=uuid4)
     date_of_birth = models.DateField(blank=True, null=True)
     title = models.CharField(max_length=100, blank=True)
