@@ -12,7 +12,7 @@ class FirstAidTraining(models.Model):
     objects = models.Manager()
 
     first_aid_id = models.UUIDField(primary_key=True, default=uuid4)
-    application_id = models.ForeignKey(
+    application_id = models.OneToOneField(
         NannyApplication, on_delete=models.CASCADE, db_column='application_id')
     training_organisation = models.CharField(max_length=100)
     course_title = models.CharField(max_length=100)
