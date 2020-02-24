@@ -19,7 +19,7 @@ class Payment(models.Model):
     payment_id = models.UUIDField(primary_key=True, default=uuid4)
 
     # Foreign Key relation to an application
-    application_id = models.OneToOneField(
+    application_id = models.ForeignKey(
         NannyApplication, on_delete=models.CASCADE, db_column='application_id')
 
     # Payment reference which adheres to a format of
