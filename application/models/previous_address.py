@@ -63,7 +63,7 @@ class PreviousAddressSerializer(serializers.ModelSerializer):
 
     def get_address(self):
         return ', '.join([self.data[p]
-                          for p in ('street_line1', 'street_line2', 'town', 'county', 'country', 'postcode', 'country')
+                          for p in ('street_line1', 'street_line2', 'town', 'county', 'postcode', 'country')
                           if self.data[p]])
 
     def get_summary_table(self):
